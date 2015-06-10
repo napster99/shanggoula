@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/form.css">
+  <link rel="stylesheet" href="../css/my.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>我_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body>
+<div class="wrap">
+
+  <div class="my">
+    <div class="hd border-top">
+      <div id="myMes" class="key-info brder-bottom">
+        <div class="r">
+          <i class="icon-m icon-qrcode"></i>
+          <i class="icon-m icon-arrow-right"></i>
+        </div>
+        <div class="avatar"><img id="avatar" src="../images/avatar.png"></div>
+        <div class="name"><span id="nickname"></span></div>
+        <div class="uid">钩钩号：<span id="no"></span></div>
+      </div>
+
+    </div>
+    <!-- 菜单列表 -->
+    <div class="menu-list">
+      <ul class="border-top">
+        <li class="border-bottom">
+          <div class="r">
+            <!-- <i class="icon-m icon-medal"></i> -->
+            <span class="value" id="levelTitle"></span>
+            <!-- <i class="icon-m icon-arrow-right"></i> -->
+          </div>
+          <i class="icon-m icon-level  color-blue"></i><span class="field">等级</span>
+        </li>
+        <li class="border-bottom">
+          <div class="r"><span class="value" id="golden"></span></div>
+          <i class="icon-m icon-money color-blue"></i><span class="field">金币</span>
+        </li>
+        <li name="mission" class="border-bottom">
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-mission color-red"></i><span class="field">任务<small>（+金币，+经验必看）</small></span>
+        </li>
+      </ul>
+      <ul name="sweep" class="border-top">
+        <li class="border-bottom">
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-scan color-blue"></i><span class="field">扫一扫</span>
+        </li>
+      </ul>
+      <ul class="border-top">
+        <li name="coupon"  class="border-bottom">
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-tag color-green"></i><span class="field">抵用券</span>
+        </li>
+        <li name="order"  class="border-bottom">
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-cart color-blue"></i><span class="field">订单</span>
+        </li>
+        <li name="collect"  class="border-bottom">
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-collect color-yellow"></i><span class="field">收藏</span>
+        </li>
+      </ul>
+
+     <!--  <ul>
+        <li>
+          <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+          <i class="icon-m icon-arrow-right color-blue"></i>
+          <span class="field">设置<i class="badge-view">new</i></span>
+        </li>
+        <li>
+          <i class="icon-m icon-clear icon-search"></i>
+          <input type="text">
+        </li>
+
+      </ul> -->
+
+      
+    </div>
+
+  </div>
+
+</div>
+</body>
+
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  apiready = function() {
+
+     // 设置ios7的标题栏字体变亮，全局用一个就行了
+    api.setStatusBarStyle({
+      style: 'light'
+    });
+
+    api.addEventListener({
+      name:'viewappear'
+    },function(ret,err){
+      // 设置ios7的标题栏字体变亮，全局用一个就行了
+      api.setStatusBarStyle({
+        style: 'light'
+      });
+    })
+
+      
+    authInfo(function(data, code, msg) {
+      if(code === 0) {
+        $api.setStorage('user', data);
+        renderData(data);
+      }else{
+        api.toast({
+          msg: msg || '获取用户信息失败',
+          duration:2000,
+          location: 'middle'
+        });
+      }
+    });
+
+    getWealthInfo();
+    
+    function getWealthInfo() {
+      wealthInfo(function(data, code, msg) {
+        if(code === 0) {
+          $('#golden').text(data['gold']);
+          $('#levelTitle').text(data['title']).data('level', data['level']);
+        }else{
+          api.toast({
+            msg: msg || '获取用户财富信息失败',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+    function renderData(data) {
+      if(!$.isEmptyObject(data)) {
+        $('#nickname').text(data['nickname']);
+        $('#no').text(data['no']);
+        $('#avatar').attr('src',data['avatar']);
+      }
+    }
+    
+    api.addEventListener({
+      name: 'viewappear'
+    }, function(ret, err){
+      authInfo(function(data, code, msg) {
+        if(code === 0) {
+          $api.setStorage('user', data);
+          renderData(data);
+        }
+      });
+
+      getWealthInfo();
+    });
+    
+    $('#myMes').on('click', function() {
+      api.openWin({
+        'name' : 'home',
+        'url' : './home/home.html'
+      })
+    });
+
+
+    $('li').on('click', function() {
+      var name = $(this).attr('name');
+      if(!name) return;
+      api.openWin({
+        'name' : name,
+        'url' : './my/'+name+'.html'
+      });
+
+    });
+
+    var scanner = api.require('scanner');
+    $('ul[name=sweep]').on('click', function() {
+
+      api.openWin({
+        'name' : 'voucher-detail',
+        'url' : './voucher-detail.html',
+        'pageParam' : {'pondId':10000}
+      });
+
+      return;
+      scanner.open(function(ret,err) {
+        sendAjax(URLConfig('qrDecode'), {'qrcode' : ret.msg}, function(data, code, msg) {
+          if(code === 0) {
+            if(data.indexOf('shanggoula://') > -1 && data.indexOf('user/qrcode') > -1) {
+              //推广
+              var uid = data.split('=')[1];
+              sendAjax(URLConfig('getNo'),{'uid' : uid},  function(data, code, msg) {
+                if(code === 0) {
+                  var no = data.no;
+                  api.openWin({
+                    'name' : 'my-qrcode',
+                    'url' : './home/my-qrcode.html',
+                    'bounces' : false,
+                    'pageParam' : {'no':no}
+                  });
+                }else{
+                  api.toast({
+                    msg: msg || '钩钩号获取失败，请稍后再试！',
+                    duration:2000,
+                    location: 'middle'
+                  });
+                }
+              });
+
+            }else if(data.indexOf('http://') > -1){
+              //http
+              if(api.systemType === 'ios') {
+                api.openApp({
+                    iosUrl: data
+                },function(ret,err){
+                });
+              }else{
+                api.openApp({
+                    androidPkg: 'android.intent.action.VIEW',
+                    mimeType: 'text/html',
+                    uri: data
+                },function(ret,err){});
+              }
+            }else if(data.indexOf('pond/detail') > -1 ) {
+              //核销  shanggoula://pond/detail?id=1
+              var pondId = data.split('=')[1];
+              api.openWin({
+                'name' : 'voucher-detail',
+                'url' : './voucher-detail.html',
+                'pageParam' : {'pondId':pondId}
+              });
+            }
+
+
+          }else{
+            api.toast({
+              msg: msg || 'UID获取失败，请稍后再试！',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+        });
+      });
+    });
+
+    
+
+  }
+</script>
+</html>

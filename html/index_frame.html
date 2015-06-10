@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/index.css">
+  <link rel="stylesheet" href="../css/article.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>首页_上钩啦_找钓点，就用上钩啦</title>
+  <style>
+    .swipe {
+      overflow: hidden;
+      /*visibility: hidden;*/
+      position: relative;
+    }
+    .swipe-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+    .swipe-wrap > li {
+      float:left;
+      width:100%;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap hidden" id="conDiv">
+
+  <!-- 活动策划 -->
+  <div class="event-planning">
+    <div id="slider" class="swipe">
+      <ul class="swipe-wrap">
+      </ul>
+    </div>
+    
+    <ul id="dotBox" class="focus">
+    </ul>
+  </div>
+
+  <!-- 活动策划end -->
+
+  <!-- 放钓头条 -->
+  <div class="fish-announcement">
+    <div class="pic"></div>
+    <ul id="putIn"  class="border-left">
+    </ul>
+  </div>
+  <!-- 放钓头条end -->
+
+  <!-- 内容块头部 -->
+  <div id="favorable" class="block-head border-bottom">
+    <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+    <i class="icon-m icon-gift"></i>精选优惠
+  </div>
+  <!-- 内容快头部end -->
+
+  <!-- 精选优惠 -->
+  <div class="recommend-shops">
+      <ul id="benefitList" class="clearfix">
+      </ul>
+  </div>
+  <!-- 精选优惠 end-->
+
+    <!-- 内容块头部 -->
+  <div id="newsTitle" class="block-head border-bottom">
+    <div class="r"><i class="icon-m icon-arrow-right"></i></div>
+    <i class="icon-m icon-send"></i>新鲜事
+  </div>
+  <!-- 内容快头部end -->
+
+  <!-- 文章列表 -->
+  <div class="article-list">
+    <ul id="newsList">
+
+      
+    </ul>
+    <div id="readMore" class="read-more border">阅读更多...</div>
+  </div>
+  <!-- 文章列表end -->
+
+</div>
+
+  <div class="load-page wait"></div>
+
+
+</body>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/swipe/swipe.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  
+  apiready = function() {
+
+    var o;
+
+    function turnOn(el) {
+      var h = el.height();
+      el.animate({'margin-top':-h+'px'},200,  function() {
+        $('#putIn').append(el);
+        el.css('margin-top',0);
+      });
+    }
+
+    
+
+    function initData() {
+      showLoadDiv(true, $('#conDiv'));
+      var mapInfo = $api.getStorage('mapInfo');
+      
+      sendAjax(URLConfig('index'), {'area_code' : mapInfo['parent_code'] }, function(data, code, msg) {
+        api.refreshHeaderLoadDone();
+        showLoadDiv(false, $('#conDiv'));
+        if(code === 0) {
+          renderData(data);
+        }else{
+          api.toast({
+            msg: msg || '请求数据出错',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+    initData();
+
+    window.initIndexData = function() {
+      initData();      
+    }
+    
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+      initData();
+    });
+
+    //点击广告图跳转
+    function openAdWin(el) {
+      var url = $(el).attr('url');
+      if(url.indexOf('news/info') > -1 ) {
+        var infoId = url.split('=')[1];
+        //文章  shanggoula://news/info?id=2
+        api.execScript({
+          name: 'index',
+          script: 'openInfoDetail("'+infoId+'");'
+        });
+      }else if(url.indexOf('http://') > -1){
+        //http
+        if(api.systemType === 'ios') {
+            api.openApp({
+                iosUrl: url
+            },function(ret,err){
+            });
+          }else{
+            api.openApp({
+                androidPkg: 'android.intent.action.VIEW',
+                mimeType: 'text/html',
+                uri: url
+            },function(ret,err){});
+          }
+      }else if(url.indexOf('pond/detail') > -1 ) {
+        //钓点  shanggoula://pond/detail?id=1
+        var pondId = url.split('=')[1];
+        api.openWin({
+          name: 'pond_detail',
+          url: './pond-details.html',
+          bounces : false,
+          pageParam: {'pondId': pondId}
+        });
+      }
+    }
+
+    window.openAdWin = openAdWin;
+
+    
+    function renderData(data) {
+      //渲染活动页
+      var htmlStr = '', dotHtmlStr = '';
+      for(var i=0; i<data['activity'].length; i++) {
+        var height = api.winWidth*9/16;
+        htmlStr += '<li onclick="openAdWin(this);" url="'+data['activity'][i]['url']+'"><img style="height:'+height+'px; width:'+api.winWidth+'px" src="'+data['activity'][i]['pic']+'"></li>'
+        dotHtmlStr += '<li></li>';
+      }
+      $('#slider').find('ul').html(htmlStr);
+      $('#dotBox').html(dotHtmlStr);
+      initSwipe();
+
+
+
+
+      //放鱼头条
+      var htmlStr = '';
+      for(var i=0; i<data['putin'].length; i++) {
+        htmlStr += '<li pid="'+data['putin'][i]['id']+'"><span class="text-flag style-1">推荐</span>'+data['putin'][i]['name']+'</li>'
+      }
+      if(!data['putin'].length) {
+        $('.fish-announcement').addClass('hidden');
+      }else{
+        $('.fish-announcement').removeClass('hidden');
+        $('#putIn').html(htmlStr);
+      }
+
+      clearInterval(o);
+
+      o = setInterval(function() {
+        var el = $('#putIn').find('li').eq(0);
+        turnOn(el);
+      },3000);
+      
+      //精选优惠
+      var htmlStr = '';
+      for(var i=0; i<data['benefit'].length; i++) {
+        htmlStr += '<li class="border-right" name="favorable">'
+                +'  <div class="img-box"><i class="icon-m icon-shop"></i></div>'
+                +'  <div class="name">'+data['benefit'][i]['name']+'</div>'
+                if(data['benefit'][i]['charge_type'] === 1) {
+                  htmlStr += '  <div class="price"><span class="now"><strong>¥'+data['benefit'][i]['price']+'</strong>/天</span> <span class="ago">'+data['benefit'][i]['origin_price']+'/天</span></div>'
+                }else if(data['benefit'][i]['charge_type'] === 2) {
+                  htmlStr += '  <div class="price"><span class="now"><strong>¥'+data['benefit'][i]['price']+'</strong>/斤</span> <span class="ago">'+data['benefit'][i]['origin_price']+'/斤</span></div>'
+                }else{
+                  htmlStr += '  <div class="price"><span class="now">免费</div>'
+                }
+                +'</li>'
+      }
+
+      if(!data['benefit'].length) {
+        $('#favorable, #benefitList').addClass('hidden');
+      }else{
+        $('#favorable,#benefitList').removeClass('hidden');
+        $('#benefitList').html(htmlStr);
+      }
+
+      //新鲜事
+      var arrs = data['news'], len = arrs.length, htmlStr = '';
+      for(var i=0; i<len; i++) {
+        try{
+          if(arrs[i]['style'] === 1) {
+            htmlStr += getDomsWithData({
+              'url'   : arrs[i]['thumbs'][0]['url'],
+              'title' : arrs[i]['title'],
+              'views' : arrs[i]['area_views'] || arrs[i]['views'],
+              'id'    : arrs[i]['id']
+            }, 1);
+          }else if(arrs[i]['style'] === 2) {
+            htmlStr += getDomsWithData({
+              'url'   : arrs[i]['thumbs']['url'],
+              'title' : arrs[i]['title'],
+              'views' : arrs[i]['area_views'] || arrs[i]['views'],
+              'id'    : arrs[i]['id']
+            }, 2);
+          }else if(arrs[i]['style'] === 3) {
+            htmlStr += getDomsWithData({
+              'url'   : [arrs[i]['thumbs'][0]['url'],arrs[i]['thumbs'][1]['url'],arrs[i]['thumbs'][2]['url']],
+              'title' : arrs[i]['title'],
+              'views' : arrs[i]['area_views'] || arrs[i]['views'],
+              'id'    : arrs[i]['id']
+            }, 3);
+          }
+        }catch(e){}
+        
+        $('#newsList').html(htmlStr);
+      }
+
+      //智能填图
+      getImageSize();
+
+    }
+
+
+    function initSwipe() {
+      if(window.mySwipe) {
+        window.mySwipe.kill();
+      };
+
+      var slide = $api.byId('slider');
+      $('#dotBox').find('li').eq(0).addClass('active');
+      window.mySwipe = Swipe(slide, {
+        // startSlide: 2,
+        // speed: 400,
+        auto: 3000,
+        continuous: true,
+        disableScroll: false,
+        stopPropagation: true,
+        callback: function(index, elem) {
+          $('#dotBox').find('li.active').removeClass('active');
+          $('#dotBox').find('li').eq(index).addClass('active');
+        },
+        transitionEnd: function(index, elem) {
+        }
+      });
+    }
+
+    //放鱼头条
+    $('#putIn').on('click', 'li', function() {
+      var id = this.id;
+
+      // api.execScript({
+      //   name  : 'index',
+      //   script: 'openPutInFrame();'
+      // });
+
+      api.openWin({
+        name : 'putin',
+        url : './put_in.html'
+      });
+
+    });
+
+    //精选优惠
+    $('#favorable').on('click', function() {
+      api.execScript({
+        name: 'index',
+        script: 'openFavorableFrame();'
+      });
+    });
+
+    $('#benefitList').on('click', 'li[name=favorable]', function() {
+      api.execScript({
+        name: 'index',
+        script: 'openFavorableFrame();'
+      });
+    });
+
+
+    //新鲜事标题
+    $('#newsTitle').on('click', function() {
+      api.execScript({
+        name: 'index',
+        script: 'openInfoFrame();'
+      });
+    });
+
+
+    //新鲜事文章 点击进入详细页
+    window.enterDetail = function(el) {
+      api.execScript({
+        name: 'index',
+        script: 'openInfoDetail("'+el.id+'");'
+      });
+    }
+
+    //阅读更多
+    $('#readMore').on('click',  function() {
+      api.execScript({
+        name: 'index',
+        script: 'openInfoFrame();'
+      });
+    });
+
+  }
+
+</script>
+</html>

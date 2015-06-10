@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/form.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <title>抵用券详情_上钩啦_找钓点，就用上钩啦</title>
+  <style>
+   .voucher-detail .banner{
+      height: 88px;
+      background: url(../../images/voucher-bg.jpg) no-repeat;
+      font-size: 17px;
+      color: #fff;
+      position: relative;
+      text-align: center;
+    }
+
+    .voucher-detail .banner div{
+      width: 75%;
+      height: 30px;
+      line-height: 30px;
+      background:-webkit-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 25%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.3) 75%, rgba(0,0,0,0) 100%) ;
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-50%,-50%);
+    }
+
+
+    .voucher-detail .price{
+      height: 47px;
+      line-height: 47px;
+      padding-left: 75px;
+      position: relative;
+      border-bottom: 1px solid #ddd;
+      color: #ff8a00;
+      font-size: 23px;
+      background-color: #fff;
+    }
+
+    .voucher-detail .price .img-box{
+      position: absolute;
+      left: 12px;
+      top: -18px;
+      width: 56px;
+      height: 56px;
+      border: 1px solid #ddd;
+    }
+
+    .voucher-detail .price span{
+      margin-right: 2px;
+    }
+
+
+    .voucher-detail .block{
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      margin: 10px 0; 
+
+    }
+
+    .voucher-detail .block .hd{
+      height: 40px;
+      line-height: 40px;
+      font-size: 15px;
+      color: #aaa;
+      padding: 0 15px;
+      border-top: 1px solid #ddd;
+    }
+
+    .voucher-detail .block .bd{
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 13px;
+
+    }
+
+    .voucher-detail .qr-code{
+      padding: 15px;
+      position: relative;
+    }
+
+    .voucher-detail .qr-code .img-box{
+      width: 150px;
+      height: 150px;
+      margin: auto;
+    }
+
+    .voucher-detail .qr-code .status{
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-50%,-50%);
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 20px;
+      color: #222;
+      background-color: #eee;
+      text-align: center;
+    }
+
+
+    .voucher-detail button{
+      margin-top: 20px;
+    }
+
+
+
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="voucher-detail">
+    <div class="banner"><div id="title"></div></div>
+    <div class="price"><div class="img-box"><img id="logo" src="../../images/shop.png"></div><span>￥</span id="coupon"></div>
+    
+    <div class="block">
+      <div class="hd">有效期</div>
+      <div id="time" class="bd">
+        
+      </div>
+    </div>
+
+
+    <div class="block">
+      <div class="hd">券码</div>
+      <div class="bd">
+        <div id="card_id" class="card-id"></div>
+      </div>
+    </div>
+
+    <!-- <div class="block">
+      <div class="hd">核销流水号</div>
+      <div class="bd">
+        9128377726612
+      </div>
+    </div> -->
+
+
+    <div class="block">
+      <div class="hd">扫码享优惠</div>
+      <div class="bd">
+        <p>找到钓点的“上钩啦”海报，用扫一扫功能对准海报上的二维码，即可完成扫码享受优惠！</p>
+        <button id="sys" class="btn primary-button">扫一扫</button>
+      </div>
+    </div>
+
+<!-- 有商户版之后
+
+    <div class="block">
+      <div class="hd">出示给钓场主</div>
+      <div class="bd">
+        <div class="card-id">券码：<span id="card_id"></span></div>
+        <div class="qr-code">
+          <div class="img-box">
+            <img id="qrImg" src="../temp/qr-code.jpg">
+            <div id="expired" class="status hidden" >该券已过期</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+ -->
+
+
+
+  </div>
+
+
+
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    function getData(name, params, callback) {
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        if(code === 0) {
+          callback(data);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+
+    getData('couponInfo', {'id' : api.pageParam['id']}, renderData);
+
+    function renderData(data) {
+      //阿红垂钓20元抵用券
+      $('#title').text(data['name']);
+      $('#coupon').text(data['coupon']);
+      $('#time').text(data['dateline']+' - ' + data['expire']);
+      $('#logo').attr('src',data['seller']['logo']);
+
+      $('#card_id').text(data['card_id']);
+
+      //有商户版之后
+      // $('#qrImg').attr('src',data['qrcode']);
+      // if(data['expired']) {
+      //   $('#expired').removeClass('hidden');
+      // }
+    }
+
+    var scanner = api.require('scanner');
+    $('#sys').on('click', function() {
+      scanner.open(function(ret,err) {
+        sendAjax(URLConfig('qrDecode'), {'qrcode' : ret.msg}, function(data, code, msg) {
+          if(code === 0) {
+            if(data.indexOf('shanggoula://') > -1 && data.indexOf('user/qrcode') > -1) {
+              //推广
+              var uid = data.split('=')[1];
+              sendAjax(URLConfig('getNo'),{'uid' : uid},  function(data, code, msg) {
+                if(code === 0) {
+                  var no = data.no;
+                  api.openWin({
+                    'name' : 'my-qrcode',
+                    'url' : './home/my-qrcode.html',
+                    'bounces' : false,
+                    'pageParam' : {'no':no}
+                  });
+                }else{
+                  api.toast({
+                    msg: msg || '钩钩号获取失败，请稍后再试！',
+                    duration:2000,
+                    location: 'middle'
+                  });
+                }
+              });
+
+            }else if(data.indexOf('http://') > -1){
+              //http
+              api.openApp({
+                iosUrl: data
+              },function(ret,err){});
+            }
+
+
+          }else{
+            api.toast({
+              msg: msg || 'UID获取失败，请稍后再试！',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+        });
+      });
+    });
+
+  }
+
+</script>
+</html>

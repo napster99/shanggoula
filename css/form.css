@@ -1,0 +1,51 @@
+
+/*表单*/
+.form-page .form-row{
+  margin: 10px 15px;
+}
+
+.form-row input{
+  background-color: #fff;
+  border-radius: 5px;
+  height: 44px;
+  padding-left:12px;
+  color: #222;
+  display: block; 
+  width: 100%;
+  font-size: 18px;
+}
+
+.form-row input::-webkit-input-placeholder{
+  font-size: 15px;
+}
+
+.form-row .l,.form-row .r{
+  width: 49%;
+}
+
+
+
+/*按钮*/
+
+.btn{
+  height: 44px;
+  display: block;
+  width: 100%;
+  border-radius: 5px;
+  border:0;
+  outline: none;
+  font-size: 15px;
+}
+
+.primary-button{
+  color: #fff;
+  background-color: #25b6ed;
+}
+
+.disable-button,.btn[disabled="true"]{
+  color: #fff;
+  background-color: #dedede;
+}
+
+
+

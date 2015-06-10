@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <link rel="stylesheet" href="../../css/voucher.css">
+  <title>我的抵用券_上钩啦_找钓点，就用上钩啦</title>
+</head>
+<body>
+<div class="wrap">
+
+
+  <!-- 抵用券列表 -->
+  <div class="voucher-list">
+    <ul id="couponList" class="hidden">
+    </ul>
+  </div>
+  <!-- 抵用券列表end -->
+
+  <div class="load-page wait"></div>
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var page_size = 15;
+
+
+    var isEnd = false, isAjaxing = false;
+    var condicationObj = {
+      'page' : 1,
+      'expired' : 0,
+      'page_size' : page_size
+    }
+
+
+    function getListData(name, params, callback, first) {
+      if(first) {
+        showLoadDiv(true, $('#couponList'));  
+      }else{
+        showButtonLoadDiv(true, $('#couponList'), '../../images/loadButton.gif');  
+      }
+      isAjaxing = true;
+
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        isAjaxing = false;
+        api.refreshHeaderLoadDone();
+        if(code === 0) {
+          callback(data, first);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+
+    getListData('couponList', condicationObj, function(data, first) {
+      renderData(data,first);
+    }, true);
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+       isEnd = false;
+       condicationObj = {
+        'page' : 1,
+        'expired' : 0,
+        'page_size' : page_size
+       }
+       isAjaxing = false;
+       $('#couponList').html('');
+      getListData('couponList', condicationObj, renderData, true);
+    });
+
+    //下拉加载
+    api.addEventListener({
+      name: 'scrolltobottom'
+    }, function(ret, err){
+      if(!isEnd && !isAjaxing) {
+        showButtonLoadDiv(false, $('#couponList'), '../../images/loadButton.gif');
+        ++condicationObj['page'];
+        getListData('couponList', condicationObj ,renderData);
+      }
+    });
+
+    function renderData(data, first) {
+      var htmlStr = '';
+      for(var i=0; i<data.length; i++) {
+        // htmlStr += '<li onclick="enterDetail(this);" id="'+data[i]['id']+'" cardId="'+data[i]['card_id']+'" class="border">'
+        //         + '  <div class="img-box"><img src="'+data[i]['seller']['logo']+'"></div>'
+        //         + '  <div class="r"><i class="icon-m icon-arrow-right"></i></div>'
+        //         + '  <div class="info">'
+        //         + '    <h3 class="name">'+data[i]['name']+'</h3>'
+        //         + '    <div class="time">'+data[i]['dateline']+' - '+data[i]['expire']+'</div>'
+        //         + '  </div>'
+        //         + '</li>'
+
+        htmlStr +='<li class="border" onclick="enterDetail(this);" id="'+data[i]['id']+'" cardId="'+data[i]['card_id']+'">'
+                +'  <div class="img-box"><i class="icon-m icon-shop"></i></div>'
+                +'  <div class="r"><i class="icon-m icon-arrow-right"></i></div>'
+                +'  <div class="info">'
+                +'    <h3 class="name">'+data[i]['name']+'</h3>'
+                +'    <div class="time">'+data[i]['dateline']+' - '+data[i]['expire']+'</div>'
+                +'  </div>'
+                +'  <div class="dot"></div>'
+                +'  <div class="stamp-left"><i></i><i></i><i></i><i></i><i></i><i></i></div>'
+                +'  <div class="stamp-right"><i></i><i></i><i></i><i></i><i></i><i></i></div>'
+                +'</li>'
+
+      }
+      if(first) {
+        $('#couponList').html(htmlStr);
+      }else{
+        $('#couponList').append(htmlStr);
+      }
+
+
+      // if(first) {
+        showLoadDiv(false, $('#couponList'));
+      // }
+
+      showButtonLoadDiv(false, $('#couponList'), '../../images/loadButton.gif');
+      if(data.length < page_size) {
+        isEnd = true;
+        if(first && data.length === 0) {
+          showNoData($('#couponList'));
+        }else if(!first){
+          api.toast({
+            msg: '没有更多数据了',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+        
+      }else{
+        showButtonLoadDiv(true, $('#couponList'), '../../images/loadButton.gif');
+      }
+    }
+
+
+    //进入详情页
+    window.enterDetail = function(el) {
+      api.openWin({
+        'name' : 'coupon-detail',
+        'url' : './coupon-detail.html',
+        'pageParam' : {'id' : el.id}
+      });
+    }
+
+
+  }
+
+</script>
+</html>

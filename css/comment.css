@@ -1,0 +1,223 @@
+.note{padding:15px;}
+
+.note-warning{
+  background-color:#FCF3D6; 
+  font-size:14px; 
+  color:#ad9632; 
+  line-height: 1.4;
+}
+.comment{
+  background-color: #fff;
+}
+
+.comment .shop-info .inner{
+  position: relative; 
+  background-color:#fff; 
+  padding:18px 15px;
+  overflow: hidden;
+}
+
+.comment .shop-info .img-box {
+  float:left; 
+  width: 56px; 
+  height:56px; 
+}
+
+.comment .shop-info h2{
+  margin-left: 75px; 
+  font-size:15px; 
+  color:#222; 
+  margin-top: 10px;
+}
+.comment .shop-info .price{
+  margin-left: 75px; 
+  margin-top: 10px; 
+  color:#aaa; 
+}
+.comment .shop-info strong{
+  color:#ff8a00; 
+  font-size:20px;
+}
+.comment .shop-info .ago{
+  text-decoration: line-through; 
+  margin-left: 5px;
+}
+
+
+.comment .total-score {
+  padding:20px 15px;
+  overflow: hidden;
+}
+.comment .total-score label{
+  float:left;
+  width: 20%; 
+  text-align: center; 
+  position: relative;
+}
+.comment .total-score .icon-m{
+  color:#ddd; 
+  font-size:42px; 
+  margin: 10px auto 20px;
+  display: inline-block;
+}
+
+.comment .total-score label div{
+  font-size: 13px;
+}
+
+.comment .total-score input:checked+.icon-m{ 
+  color:#f90; 
+}
+
+.comment .sanwei{
+  padding:15px 15px 30px; 
+}
+
+.comment .sanwei dl{
+  margin-bottom: 10px;
+  height:40px; 
+  line-height: 40px;
+}
+
+.comment .sanwei dt{
+  float:left; 
+  width: 70px; 
+  text-align: center;
+  
+}
+.comment .sanwei dd{
+  margin-left: 90px; 
+  overflow: hidden;
+}
+
+.comment .sanwei dd label{
+  margin-right: 15px;
+}
+
+.comment .sanwei .icon-m{
+  font-size:35px; 
+  color: #ddd; 
+  vertical-align: middle;
+}
+.comment .sanwei label{
+  float:left; 
+}
+.comment .sanwei input:checked+.icon-m{
+  color: #f90;
+}
+
+.comment .input-area{
+  padding:15px 15px 0px 0; 
+  position: relative; 
+  margin-bottom: 20px;
+}
+
+.comment .input-area .mic{
+  width: 55px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+}
+
+.comment .input-area .mic .icon-m{
+  font-size: 28px;
+  color: #007aff;
+}
+
+.comment .input-area .c{
+  margin-left: 55px; 
+  padding-left: 15px; 
+}
+.comment .input-area textarea{
+  background: transparent; 
+  width: 100%;
+  min-height: 48px;
+  resize:none;
+}
+
+.comment .write .tip{
+  clear: both;
+  padding: 10px 15px;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.comment .write .tip:before{
+  content:"";
+  position: absolute;
+  top:0;
+  left:0;
+  width: 20px;
+  border-top:1px solid #fff;
+  -webkit-transform:scaleY(.5);
+  -webkit-transform-origin:0 0;
+  z-index: 2;
+}
+
+.comment .noname{
+  position: relative;
+  font-size: 14px;
+}
+
+.comment .noname .icon-check{
+  position: absolute;
+  left: 1px; top: 0px;
+  font-size: 12px;
+  display: none;
+}
+
+.comment .noname input:checked ~ .icon-m{
+  color: #007aff;
+}
+
+.comment .noname input:checked ~ .icon-check{
+  display: inline;
+}
+
+
+.comment .write .l{ float: left; }
+.comment .write strong{color:#ff8a00; font-weight:normal;}
+
+.comment .camare{
+  padding:15px; 
+  overflow: hidden;
+}
+
+
+.comment .camare li{
+  float: left;
+  width: 33.333333%;
+}
+
+.comment .camare .dash-square{
+  border: 1px dashed #ddd;
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  position: relative;
+  margin: auto;
+}
+
+.comment .camare li .img-box{
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.comment .camare li .img-box .icon-m{
+  font-size: 40px;
+}
+
+.comment .camare li .icon-close-fill{
+  font-size: 20px;
+  position: absolute;
+  top: -10px; right: -10px;
+  color: #fa5151;
+}
+
+
+

@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/comment-list.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>评论列表_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body>
+<div class="wrap">
+
+  <div class="comment-list">
+   <ul id="commentList" class="hidden">
+   </ul>
+   <!-- <div class="seal"></div> -->
+  </div>
+
+  <div class="load-page wait"></div>
+  
+</div>
+</body>
+
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var page_size = 15;
+
+
+    var isEnd = false, isAjaxing = false;
+    var condicationObj = {
+      'page' : 1,
+      'page_size' : page_size,
+      'pond_id' : api.pageParam['pondId']
+    }
+
+    function getListData(name, params, callback, first) {
+      if(first) {
+        showLoadDiv(true, $('#commentList'));  
+      }else{
+        showButtonLoadDiv(true, $('#commentList'));  
+      }
+      isAjaxing = true;
+
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        isAjaxing = false;
+        api.refreshHeaderLoadDone();
+        if(code === 0) {
+          callback(data, first);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+
+    getListData('commentList', condicationObj, function(data, first) {
+      renderData(data,first);
+    }, true);
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+       isEnd = false;
+       condicationObj = {
+        'page' : 1,
+        'pond_id' : api.pageParam['pondId'],
+        'page_size' : page_size
+       }
+       isAjaxing = false;
+       $('#commentList').html('');
+      getListData('commentList', condicationObj, renderData, true);
+    });
+
+
+    //下拉加载
+    api.addEventListener({
+      name: 'scrolltobottom'
+    }, function(ret, err){
+      if(!isEnd && !isAjaxing) {
+        showButtonLoadDiv(false, $('#commentList'));
+        ++condicationObj['page'];
+        getListData('commentList', condicationObj ,renderData);
+      }
+    });
+
+    function renderData(data, first) {
+      var htmlStr = '';
+      for(var i=0; i<data.length; i++) {
+          htmlStr +='<li class="border-bottom">'
+                  +'  <div class="avatar-round"><img src="'+data[i]['commenter']['avatar']+'" alt=""></div>'
+                  +'  <div class="info">'
+                  +'    <h3>'+data[i]['commenter']['nickname']+'</h3>'
+                  +'    <div class="star-time">'
+                  +'      <div class="stars">'
+                  for(var j=0; j<data[i]['total']; j++) {
+                    htmlStr +='        <i class="icon-m icon-me2"></i>'
+                  }
+          htmlStr +='      </div>'
+                  +'      <span class="time">'+data[i]['dateline']+'</span>'
+                  +'    </div>'
+                  +'    <div class="content">'
+                  +'    '+data[i]['comment']+'......'
+                  +'    </div>'
+                  +'    <ul class="pics">'
+                  for(var j=0; j<data[i]['pics'].length; j++) {
+                    htmlStr +='      <li class="img-box"><img src="'+data[i]['pics'][j]+'" alt=""></li>'
+                  }
+          htmlStr +='    </ul>'
+                  // +'    <div class="expansion"><i class="icon-m icon-Drop-down"></i></div>'
+                  +'  </div>'
+                  // +'  <div class="report">!</div>'
+                  +'</li>'
+      }
+      if(first) {
+        $('#commentList').html(htmlStr);
+      }else{
+        $('#commentList').append(htmlStr);
+      }
+
+      if(first) {
+        showLoadDiv(false, $('#commentList'));
+      }
+
+      showButtonLoadDiv(false, $('#commentList'));
+      if(data.length < page_size) {
+        isEnd = true;
+        if(first && data.length === 0) {
+          showNoData($('#commentList'));
+        }else if(!first){
+          api.toast({
+            msg: '没有更多数据了',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+        
+      }else{
+        showButtonLoadDiv(true, $('#commentList'));
+      }
+    }
+
+  }
+
+</script>
+</html>

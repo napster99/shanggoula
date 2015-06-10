@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <title>我的抵用券_上钩啦_找钓点，就用上钩啦</title>
+</head>
+<body>
+<div class="wrap">
+  <!-- 头部 -->
+  <div id="header" class="top-bar gray-style">
+    <div class="l" onclick="api.closeWin();">
+      <i class="icon-m icon-arrow-left"></i>返回
+    </div>
+    <div class="center-part">我的抵用券</div>
+  </div>
+  <!-- 头部 end-->
+
+  <!-- 数据过滤 -->
+  <div class="tab-switch">
+    <ul class="col-2 clearfix">
+      <li name="expired" value="useing" class="active border-bottom">未使用</li>
+      <li name="expired" value="overdue" class="border-bottom">已过期</li>
+    </ul>
+  </div>
+  <!-- 数据过滤end -->  
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+
+    // 设置ios7的标题栏字体变亮，全局用一个就行了
+    api.setStatusBarStyle({
+      style: 'dark'
+    });
+
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+
+    var couponOpend = true, couponOtherOpend = false;
+
+    openFrame('coupon_frame');
+
+    function openFrame(name) {
+      api.openFrame({
+        name: name,
+        url: './'+name+'.html',
+        bounces: false,
+        opaque: true,
+        vScrollBarEnabled: true,
+        rect: {
+          x: 0,
+          y: $('.top-bar').offset().height + $('.tab-switch').offset().height,
+          w: 'auto',
+          h: 'auto'
+        }
+      });
+    }
+
+    $('li[name=expired]').on('click', function() {
+      var value = $(this).attr('value');
+      $('li.active').removeClass('active');
+      $(this).addClass('active');
+
+      if(value === 'useing') {
+        api.setFrameAttr({
+          'name' : 'coupon_frame_other',
+          'hidden' : true
+        })
+
+        api.setFrameAttr({
+          'name' : 'coupon_frame',
+          'hidden' : false
+        });
+
+      }else{
+        api.setFrameAttr({
+          'name' : 'coupon_frame',
+          'hidden' : true
+        });
+        if(!couponOtherOpend) {
+          openFrame('coupon_frame_other');
+          couponOtherOpend = true;
+        }else{
+          api.setFrameAttr({
+            'name' : 'coupon_frame_other',
+            'hidden' : false
+          });
+        }
+
+      }
+
+
+    });
+
+
+  }
+
+</script>
+</html>

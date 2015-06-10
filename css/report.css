@@ -1,0 +1,20 @@
+.onerow-menu li{
+	height: 45px;
+	line-height: 45px;
+	padding: 0 12px;
+	color: #555;
+	font-size: 14px;
+	background-color: #fff;
+}
+
+
+.report .main-button{
+	margin: 10px 10px 20px;
+}
+
+.report .desc{
+	color: #aaa;
+	line-height: 1.5;
+	text-align: center;
+}
+

@@ -1,0 +1,18 @@
+.mission-detail .block{ 
+	padding: 20px 35px;
+}
+.mission-detail h2 { font-size: 17px}
+.status{
+	color: #aaa;
+	margin-top: 12px;
+	margin-bottom: 20px;
+}
+
+.mission-detail .info li{
+	height: 24px;
+	line-height: 24px;
+	color: #555;
+}
+
+
+.mission-detail h3 { font-size: 13px; margin-bottom: 15px;}

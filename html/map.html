@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <meta name="viewport" content="maximum-scale=1,minimum-scale=1,user-scalable=1,width=device-width,initial-scale=1"/>
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta content="telephone=no" name="format-detection" />
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <link rel="stylesheet" href="../css/map.css">
+  <title>地图</title>
+ <style type="text/css">
+    #mapContainer{
+      position: absolute;
+      top:0;
+      left: 0;
+      right:0;
+      bottom:0;
+    }
+
+    .amap-logo, .amap-copyright{
+      display: none;
+    }
+
+    #header{z-index: 99;}
+ </style>
+</head>
+<body>
+
+<div id="mapContainer"></div>
+<div class="wrap">
+  <div class="map-cover">
+    <div id="header" class="data-filter border-bottom">
+      <ul class="clearfix">
+        <li id="goBack" class="border-right"><i class="icon-m icon-arrow-left"></i></li>
+        <li name="condition" id="city" class="border-right">全城<i class="icon-m icon-fold"></i></li>
+        <li name="condition" id="filter" class="border-right">筛选<i class="icon-m icon-fold"></i></li>
+        <li id="refresh"><i class="icon-m icon-refresh"></i></li>
+      </ul>
+    </div>
+
+    <div class="bottom-control">
+      <div id="myPos" class="l"><i class="icon-m icon-focus"></i></div>
+      <div class="r"><i class="icon-m icon-list"></i></div>
+    </div>
+
+  </div>
+
+    <div class="mask hidden"></div>
+    <!-- 筛选条件 -->
+    <div class="condition-list" style="position:relative; z-index:9999;">
+
+      <!-- 城市下拉 -->
+      <div name="city" class="hidden">
+        <div class="area-list">
+          <div class="bd">
+            <ul class="filter-col-3">
+            </ul>
+          </div>
+          <div  id="switchCity" class="ft border-top">
+            <div class="city-switch border">
+              <div  class="r">
+                更换
+                <i class="icon-m icon-arrow-right"></i>
+              </div>
+              当前城市：<span id="currentCity"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 城市下拉 end-->
+      <!-- 筛选 -->
+      <div name="filter" class="filter-pop hidden">
+        <div id="filterList">
+        </div>
+        <div class="filter-actions">
+          <label id="reset" class="l">重置</label>
+          <label id="done" class="r">完成</label>
+        </div>
+      </div>
+      <!-- 筛选 end-->
+      
+    </div>
+    <!-- 筛选条件 end-->
+
+
+
+</div>
+
+</body>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script src="http://webapi.amap.com/maps?v=1.3&key=425928309ed735359972d7edb1534ff1"></script>
+<script>
+    apiready = function() {
+      var header = $api.byId('header');
+      $api.fixIos7Bar(header);
+      var headerPos = $api.offset(header);
+
+      //返回
+      $('#goBack').on('touchstart', function() {
+
+        api.closeWin();
+
+        // var whichMap = $api.getStorage('whichMap');
+        // var pondId = $api.getStorage('pondId');
+
+        // if(whichMap === 'map1') {
+        //   api.openWin({
+        //     name: 'index',
+        //     url: '../index-main.html',
+        //     slidBackEnabled : false
+        //   });
+        // }else{
+        //   api.openWin({
+        //     name: 'pond_detail',
+        //     url: './pond-details.html',
+        //     bounces : false,
+        //     pageParam: {'pondId': pondId}
+        //   });
+        // }
+
+
+
+      });
+
+      var curMode = '';
+      $('li[name=condition]').on('click', function() {
+        var id = this.id;
+        $('div[name=city], div[name=filter]').addClass('hidden');
+        if(!curMode) {
+          $('div[name='+id+'], .mask').removeClass('hidden');
+          curMode = true;
+        }else{
+          $('div[name='+id+'], .mask').addClass('hidden');
+          curMode = false;
+        }
+      });
+
+
+      //刷新
+      $('#refresh').on('touchstart',  function() {
+        // $(this).find('i').addClass('rotate');
+        map.clearMap();
+        initData('', true);
+      });
+
+      var marker = [];
+      var windowsArr = [];
+      //基本地图加载
+      var map = new AMap.Map("mapContainer", {
+        resizeEnable: true,
+        zoom:12
+      });
+
+      
+      var baiduLocation = api.require('baiduLocation');
+      var myMarker = null;
+      //我的定位
+      $('#myPos').on('touchstart', function() {
+        api.showProgress({
+          style: 'default',
+          animationType: 'fade',
+          title: '正在定位...',
+          // text: '先喝杯茶...',
+          modal: false
+        });
+        baiduLocation.getLocation(function(ret, err){
+          var sta = ret.status;
+          var lat = ret.latitude;
+          var lon = ret.longitude;
+          api.hideProgress();
+          if(sta) {
+            var placeObj = GpsEncode['bdDecrypt'](lon, lat);
+            
+            $api.setStorage('winLat', placeObj['lat']);
+            $api.setStorage('winLon', placeObj['lng']);
+            if(myMarker) {
+              myMarker.setMap(null);
+            }
+            myMarker = new AMap.Marker({
+              icon:"http://webapi.amap.com/images/marker_sprite.png",  
+              position:new AMap.LngLat(placeObj['lng'], placeObj['lat'])
+            });
+            myMarker.setMap(map); 
+            myMarker.setAnimation('AMAP_ANIMATION_BOUNCE'); //设置点标记的动画效果，此处为弹跳效果   
+            map.setCenter(new AMap.LngLat(placeObj['lng'], placeObj['lat']));
+          }else{
+            api.toast({
+              msg: '定位失败',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+        });
+      });
+      
+      
+      window.initData = function(data, flag) {
+        if(flag) {
+          map.clearMap();
+        }
+        var curLocation =  data || $api.getStorage('curLocation');
+
+
+        for(var i=0; i<curLocation.length; i++) {
+          addmarker(curLocation[i]);
+        }
+
+        // $('#refresh').find('i').removeClass('rotate');
+        if(flag) {
+          map.setFitView();
+        }
+      }
+
+      if(!$.isEmptyObject(api.pageParam)) {
+        initData([api.pageParam], true);
+      }else{
+        initData('', true);
+      }
+
+      api.addEventListener({
+        name:'viewappear'
+      },function(ret,err){
+        var whichMap = $api.getStorage('whichMap');
+        var pondId = $api.getStorage('pondId');
+        if(whichMap === 'map1') {
+          initData('', true);
+        }else{
+          var pondDetailObj = $api.getStorage('pondDetailObj');
+          initData([pondDetailObj], true);
+        }
+
+      })
+
+      function addmarker(data) {
+          var lngX = data['lng'];
+          var latY = data['lat'];
+          var markerOption = {
+            map:map,
+            icon:'../images/pin-unkonw.png',
+            position:new AMap.LngLat(lngX, latY)
+          };
+          // 1:池塘images/pin-pond.png,2:江河 images/pin-lake.png,3:水库 images/pin-river.png
+          switch(data['type']) {
+            case '1':
+              markerOption['icon'] = '../images/pin-pond.png';
+              break;
+            case '2':
+              markerOption['icon'] = '../images/pin-lake.png';
+              break;
+            case '3':
+              markerOption['icon'] = '../images/pin-river.png';
+              break;
+          }
+
+          var mar = new AMap.Marker(markerOption);         
+          marker.push(new AMap.LngLat(lngX, latY));
+          var htmlStr = '';
+
+
+         htmlStr  += '<div class="img-box"><img src="'+data['spic']+'" /></div>'
+                  + '<i onclick="enterDetail('+data['id']+');" class="icon-m icon-arrow-right"></i>'
+                  + '<div class="info">'
+                  + '  <h3 class="name">'+data['name']+'</h3>'
+                  + '  <div class="price">'
+
+                  if(!data['price']) {
+                    htmlStr += '      未知';
+                  }else{
+                    if(data['discount_price']) {
+                      if(data['charge_type'] == 1) {
+                        htmlStr += '      免费';
+                      }else if(data['charge_type'] == 3){
+                        htmlStr += '      ￥'+data['discount_price']+'<small>/天</small><del>'+data['price']+'/天</del>';
+                      }else if(data['charge_type'] == 2) {
+                        htmlStr += '      ￥'+data['discount_price']+'<small>/斤</small><del>'+data['price']+'/斤</del>';
+                      }else{
+                        htmlStr += '      未知';
+                      }
+                    }else{
+                      if(data['charge_type'] == 1) {
+                        htmlStr += '      免费';
+                      }else if(data['charge_type'] == 3){
+                        htmlStr += '      ￥'+data['price']+'<small>/天</small>';
+                      }else if(data['charge_type'] == 2) {
+                        htmlStr += '      ￥'+data['price']+'<small>/斤</small>';
+                      }else{
+                        htmlStr += '      未知';
+                      }
+                    }
+                  }
+
+
+                  htmlStr += '  </div>'
+
+                  if(data['level'] == 9) {
+                    htmlStr += '<div class="auth-badage lv-1">官方认证</div>'
+                  }else if(data['level'] == 5){
+                    htmlStr += '    <div class="auth-badage lv-2">钓友认证</div>'
+                  }else if(data['level'] == 3) {
+                    htmlStr += '    <div class="auth-badage lv-3">电话认证</div>'
+                  }else{
+                    htmlStr += '    </div></li>'
+                  }
+
+                  htmlStr += '</div>'
+
+          var infoWindow = new AMap.InfoWindow({
+              content: htmlStr,
+              size:new AMap.Size(300, 0),
+            //  autoMove:true, 
+              offset:new AMap.Pixel(0,-20)
+          });
+          // windowsArr.push(infoWindow);
+          var aa = function (e) {
+            infoWindow.open(map, mar.getPosition());
+          };
+          AMap.event.addListener(mar, "click", aa);
+      }
+
+
+
+      // AMap.event.addListener(map,'dragstart',function(e){
+        
+      // });
+
+      // AMap.event.addListener(map,'dragging',function(e){
+
+      // });
+
+      AMap.event.addListener(map,'dragend',function(e){
+        var cLng = map.getCenter().getLng();
+        var cLat = map.getCenter().getLat();
+        var zoom = this.getZoom();
+        var mapInfo = $api.getStorage('mapInfo');     
+        var params = {
+          'lat' : cLat,
+          'lon' : cLng,
+          'zoom' : zoom,
+          'area_code' : mapInfo['area_code']
+        }
+        getAreaData(params);
+      });
+
+
+      window.enterDetail = function(id) {
+        api.openWin({
+          name: 'pond_detail',
+          url: './pond-details.html',
+          bounces : false,
+          pageParam: {'pondId': id}
+        });
+      }
+
+      function getAreaData(params, flag){
+        sendAjax(URLConfig('pondList'), params, function(data, code, msg) {
+          if(code === 0) {
+            var pondListArr = [];
+            for(var i=0; i<data.length; i++) {
+              pondListArr.push({
+                'id' : data[i]['id'],
+                'name' : data[i]['name'],
+                'type' : data[i]['type'],
+                'lat' : data[i]['location_lat'],
+                'lng' : data[i]['location_lon']
+              });
+            }
+            if(flag) {
+              map.clearMap();
+              initData(pondListArr);
+            }else{
+              if(params['zoom'] >= 12) {
+                map.clearMap();
+                initData(pondListArr);
+              }  
+            }
+          }else{  
+            api.toast({
+              msg: msg || '请求失败，稍后再试',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+
+        });
+      }
+
+
+      function getConfigData() {
+       var mapInfo = $api.getStorage('mapInfo');
+       $('#currentCity').text(mapInfo['parent_name']);
+       sendAjax(URLConfig('pondFilter'), {'area_code' : mapInfo['parent_code']}, function(data, code, msg) {
+          if(code === 0) {
+            renderData(data);
+          }else{
+            api.toast({
+              msg: msg || '获取失败，稍后再试',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+        });
+      }
+
+      window.getConfigData = getConfigData;
+
+
+      function renderData(data){
+        $.each(data,  function(k,v) {
+          if(k === 'city') {
+            var ac = v['area_code'], dc = v['distance'],htmlStr = '<li class="border" >全城-附近</li>';
+            for(var i=0; i<dc.length; i++) {
+              htmlStr += '<li class="border" value='+dc[i]['value']+'>'+dc[i]['name']+'</li>'
+            }
+            for(var i=0; i<ac.length; i++) {
+              htmlStr += '<li class="border" area_code='+ac[i]['area_code']+'>'+ac[i]['name']+'</li>'
+            }
+            $('div[name=city]').find('ul').html(htmlStr);
+          }else if(k === 'filter') {
+            var htmlStr = '';
+
+            for(var i=0; i<v.length; i++) {
+              htmlStr += '<dl class="filter-list border-bottom">'
+                      + '<dt>' +v[i]['name']+ '</dt>'
+                      + '<dd>'
+              $.each(v[i],  function(k1, v1) {
+                if(v1 instanceof Array) {
+                  var el = v1[0]['values']?v1[0]['values'] : v1;
+                  for(var j=0; j<el.length; j++) {
+                    if(v1[0]['name'] === 'type' || v1[0]['name'] === 'fishing_pos') {
+                      htmlStr += '<label><input type="radio" name="'+v1[0]['name']+'" value="'+el[j]['value']+'"><p>'+el[j]['name']+'</p></label>'
+                    }else{
+                      htmlStr += '<label><input type="checkbox" name="'+v1[0]['name']+'" value="'+el[j]['value']+'"><p>'+el[j]['name']+'</p></label>'
+                    }
+                  }
+                  htmlStr += '</dd></dl>'        
+                }
+              });
+            }
+
+            $('#filterList').html(htmlStr);
+
+          }
+        });
+      }
+
+      $('.mask').on('click',  function() {
+        $('div[name=city], div[name=filter]').addClass('hidden');
+        $(this).addClass('hidden');
+        curMode = false;
+      });
+
+      //完成  筛选这块
+      $('#done').on('click',  function(event) {
+        var checkboxs = $('#filterList').find('input:checked'), params = {};
+
+        for(var i=0; i<checkboxs.length; i++) {
+          params[checkboxs.eq(i).attr('name')+''] = checkboxs.eq(i).attr('value');
+        }
+        getAreaData(params, true);
+        $('div[name=city], div[name=filter], .mask').addClass('hidden');
+        curMode = false;
+
+        event.preventDefault();
+        return false;
+      });
+
+      //切换城市
+      $('#switchCity').on('click',  function() {
+        api.execScript({
+          name: 'index',
+          script: 'openChangeCityWin();'
+        });
+        event.preventDefault();
+        return false;
+      });
+
+      //重置 筛选这块
+      $('#reset').on('click',  function() {
+        var checkboxs = $('#filterList').find('input:checked');
+        for(var i=0; i<checkboxs.length; i++) {
+          checkboxs.eq(i)[0].checked = false;
+        }
+        event.preventDefault();
+        return false;
+      });
+
+      //全城
+      $('div[name=city]').on('click', 'li', function() {
+        var params = {};
+        if($(this).attr('value')) {
+          params['distance'] = $(this).attr('value');
+        }else{
+          params['area_code'] = $(this).attr('area_code') ? $(this).attr('area_code') : 310000;
+        }
+
+        getAreaData(params, true);
+        $('div[name=city], div[name=filter], .mask').addClass('hidden');
+        curMode = false;
+
+        event.preventDefault();
+        return false;
+      });
+
+      getConfigData();
+
+    }
+
+    
+
+
+
+  
+</script>
+</html>

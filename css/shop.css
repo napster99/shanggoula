@@ -1,0 +1,82 @@
+
+
+/*当前地址*/
+
+.cur-addr{
+  padding-left: 15px;
+  height: 33px;
+  line-height: 33px;
+  color: #888;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cur-addr .icon-m{
+  padding: 10px 15px;
+}
+
+
+/*商户列表*/
+.shop-list li{
+  height: 94px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.shop-list .img-box{
+  float: left;
+  width: 97px;
+  height: 73px;
+  overflow: hidden;
+  text-align: center;
+}
+
+
+.shop-list .info{
+  margin-left: 105px; 
+  position: relative;
+}
+
+.shop-list .info .name{
+  font-size: 15px;
+  padding-top: 3.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+}
+
+.shop-list .info .price{
+  margin: 13px 0;
+  font-size: 16px;
+  color: #ff8a00;
+}
+
+.shop-list .info small,.shop-list .info del{
+  color: #aaa;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.shop-list .info .addr{
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  padding-right: 50px;
+  position: relative;
+}
+
+
+
+.shop-list .info .auth-badage{
+  position: absolute;
+  right: 0;
+  top: 3.5px;
+}
+
+.shop-list .info .distance{
+  position: absolute;
+  right: 0;
+}
+

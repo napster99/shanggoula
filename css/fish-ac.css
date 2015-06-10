@@ -1,0 +1,54 @@
+.fish-ac-list{
+  background-color: #fff; 
+}
+
+.fish-ac-list>ul>li{
+  overflow: hidden;
+  padding: 10px;
+  position: relative;
+}
+
+.fish-ac-list .img-box{
+  width: 65px;
+  height: 65px;
+  float: left;
+}
+
+.fish-ac-list .info{ 
+  margin-left: 75px;
+
+}
+
+.fish-ac-list .info .name{
+  color: #222;
+  font-size: 15px;
+  padding: 5px 0;
+}
+
+.fish-ac-list .info .param{
+  color: #555;
+}
+
+.fish-ac-list .info .param span{
+  color: #aaa;
+}
+
+.fish-ac-list .info .param li{
+  overflow: hidden;
+  padding: 2px 0;
+  line-height: 1.4;
+}
+
+.fish-ac-list .param strong{
+  color: #ff8a00;
+  font-weight: normal;
+}
+
+.fish-ac-list .addr{
+  color: #aaa;
+  padding: 10px 0;
+}
+
+
+
+

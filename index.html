@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/component.css">
+  <link rel="stylesheet" href="./css/login.css">
+  <link rel="stylesheet" href="./css/font-icon.css">
+  <title>登录_上钩啦_找钓点，就用上钩啦</title>
+  <style>
+    .login{
+      height: 100%;
+      background: #525252 url(./images/login-way.jpg) no-repeat;
+      background-size: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-way{
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      padding-bottom: 15px;
+    }
+
+    .login-way ul{
+      margin: auto;
+      width: 92%;
+    }
+
+    .login-way li{
+      border-radius: 5px;
+      background-color: rgba(255,255,255,.6);
+      color: #222;
+      height: 40px;
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 40px;
+      text-align: center;
+    }
+
+    .reg-guest{
+      font-size: 14px;
+      color: #fff;
+      width: 92%;
+      margin: 15px auto 0;
+    }
+
+    .reg-guest .l{
+      color: #2ddfff;
+    }
+
+
+  .swipe {
+    overflow: hidden;
+    /*visibility: hidden;*/
+    position: relative;
+  }
+  .swipe-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  .swipe-wrap > li {
+    float:left;
+    width:100%;
+    position: relative;
+  }
+
+  #firstEnter{
+    position: absolute;
+    bottom: 20%;
+    width: 225px;
+    height: 80px;
+    /*border: 1px solid red;*/
+    z-index: 9999;
+    left: 20%;
+    bottom: 15%;
+  }
+
+  </style>
+</head>
+<body>
+
+
+  <div id="slider" class="swipe hidden">
+    <ul class="swipe-wrap">
+      <li><img src="./images/first-1.jpg"></li>
+      <li><img src="./images/first-2.jpg"></li>
+      <li id="threeImg"><img src="./images/first-3.jpg"></li>
+    </ul>
+  </div>
+
+
+
+  <div id="wrap" class="wrap hidden">
+    <div class="login">
+      <div class="login-way">
+        <ul>
+          <li id="weixin">微信登录</li>
+          <li id="qq">QQ登录</li>
+          <li id="login">手机号登录</li>
+          <li id="guangguang" >先逛一逛</li>
+        </ul>
+        <!-- <div class="reg-guest">
+          <div id="register" class="l">注册</div>
+          <div id="guangguang" class="r">逛一逛</div>
+        </div> -->
+      </div>  
+    </div>
+</div>
+</body>
+<script src="./script/api.js"></script>
+<script src="./script/zepto.min.js"></script>
+<script src="./script/common.js"></script>
+<script src="./script/swipe/swipe.js"></script>
+<script src="http://webapi.amap.com/maps?v=1.3&key=425928309ed735359972d7edb1534ff1"></script>
+<script>
+  /* 首页头部和底部 */
+  apiready = function() {
+
+
+    // var rong = api.require('rongCloud');
+
+    // rong.init(function(ret, err){
+    //         api.toast({ msg: JSON.stringify(ret) });
+    // });
+
+
+    // rong.connect({
+    // token: 'ThptTWyiPPPvZHvuSiuri82yq+hfEluLjZ78E1qo4hEVSFQNpqdoPu406urMWKN4Z3/olWR+v9JVLAwfOQoLrA=='},
+    // function(ret, err){
+    //     if (ret.status == 'success')
+    //         api.toast({ msg: ret.result.userId });
+    // });
+
+
+
+      // 设置ios7的标题栏字体变亮，全局用一个就行了
+      api.setStatusBarStyle({
+        style: 'dark'
+      });
+      
+      api.addEventListener({
+        name:'viewappear'
+      },function(ret,err){
+        // 设置ios7的标题栏字体变亮，全局用一个就行了
+        api.setStatusBarStyle({
+          style: 'dark'
+        });
+      });
+      
+      api.setWinAttr({
+        // 'name' : 'root',
+        'bounces' : false
+      });
+
+    //第一次加载
+    var appFirstStart = $api.getStorage('appFirstStart');
+    if(!appFirstStart) {
+      $('#slider').removeClass('hidden');
+      $('#slider').find('img').height(Number(api.winHeight) - 2).width(Number(api.winWidth));
+      var slide = $api.byId('slider');
+      $('#dotBox').find('li').eq(0).addClass('active');
+      window.mySwipe = Swipe(slide, {
+        // auto: 3000,
+        continuous: false,
+        disableScroll: false,
+        stopPropagation: true,
+        callback: function(index, elem) {
+        },
+        transitionEnd: function(index, elem) {
+        }
+      });
+
+      //定位失败，默认上海
+      $api.setStorage('mapInfo', {
+        'parent_code' : 310100,
+        'parent_name' : '上海',
+        'area_code' : 310116,
+        'area_name' : '金山区'
+      });
+
+      $api.setStorage('curCityObj', {
+        'curCode' : 310100,
+        'curCity' : '上海',
+        'area_code' : 310116,
+        'area_name' : '金山区'
+      });
+
+    }else{
+      $('#slider').addClass('hidden');
+      $('#wrap').removeClass('hidden');
+      // startLocation(function() {
+        isLogin();
+      // });
+    }
+
+    $('#threeImg').on('click',  function() {
+      $api.setStorage('appFirstStart', true);
+      $('#slider').addClass('hidden');
+      $('#wrap').removeClass('hidden');
+      startLocation(function() {
+        isLogin();
+      });
+    });
+
+
+
+
+
+    function isLogin() {
+      
+      api.showProgress({
+          style: 'default',
+          animationType: 'fade',
+          title: '正在检测用户信息...',
+          text: '先喝杯茶...',
+          modal: true
+      });
+
+      //定位完后请求是否登陆
+      authInfo(function(data, code, msg) {
+        api.hideProgress();
+        if(code === 0) {
+          $api.setStorage('user', data);
+          api.openWin({
+            name: 'index',
+            url: './index-main.html',
+            slidBackEnabled : false
+          });
+        }else{
+          api.removeLaunchView();
+        }
+      });
+    }
+
+
+    if(!$api.getStorage('weixin-index')) {
+      var weiXin = api.require('weiXin');
+      weiXin.registerApp(
+          function(ret,err){
+            if(ret.status) {
+              $api.setStorage('weixin-index',true);
+            }else{
+              $api.setStorage('weixin-index',null);
+            }
+          }
+      );
+    }
+    
+    
+    $('#register').on('click',  function() {
+      api.openWin({
+          name: 'register',
+          url: './html/register.html',
+          bounces : false
+      });
+    });
+
+
+    $('#login').on('click',  function() {
+      api.openWin({
+          name: 'login',
+          url: './html/login.html',
+          bounces : false
+      });
+    });
+
+
+    $('#guangguang').on('click',  function() {
+      api.openWin({
+          name: 'index',
+          url: './index-main.html',
+          slidBackEnabled : false,
+          pageParam : {'guangguang' : true}
+      });
+    });
+
+    $('#weixin').on('click',  function() {
+      var weiXin = api.require('weiXin');
+      weiXin.auth(function(ret,err){ 
+        if(ret.status){
+            api.alert({msg: ret.token});
+         }else{
+            api.alert({msg: err.msg});
+         }
+      });
+    });
+
+    $('#qq').on('click',  function() {
+      var obj = api.require('qq');
+      obj.login(function(ret,err){
+          api.alert({
+              title: 'id和token',
+              msg: ret.openId + ret.accessToken
+          });
+      });
+    });
+
+  }
+</script>
+</html>

@@ -1,0 +1,837 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <link rel="stylesheet" href="../css/shop-detail.css">
+  <link rel="stylesheet" href="../css/comment-list.css">
+  <link rel="stylesheet" href="../css/article-detail.css">
+  <title>首页_上钩啦_找钓点，就用上钩啦</title>
+  <style>
+    .swipe {
+      overflow: hidden;
+      /*visibility: hidden;*/
+      position: relative;
+    }
+    .swipe-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+    .swipe-wrap > li {
+      float:left;
+      width:100%;
+      position: relative;
+    }
+  </style>
+</head>
+<body onscroll="srollEvents(document.body.scrollTop);">
+  <div class="wrap">
+    <div class="shop-detail"  style="padding-bottom:50px;">
+      <div class="top-btn border-bottom" id="bannerFilter">
+        <div id="goBack" class="l"><i class="icon-m icon-back"></i></div>
+        <div id="share" class="r"><i class="icon-m icon-share"></i></div>
+        <div id="ticket" class="r"><i class="icon-m icon-tag"></i></div>
+      </div>
+
+      <div class="pic-group">
+        <div id="slider"  class="slider">           
+           <ul class="swipe-wrap">
+           </ul>
+           <span class="status">
+            <span id="sliderNum"></span>/<span id="sliderTotal"></span>
+           </span>
+        </div>
+      </div>
+
+
+      <div class="head-info border-bottom">
+        <div id="level" class="level border-left"><img src=""><div></div></div>
+        <div class="img-box border"><i class="icon-m icon-shop"></i></div>
+        <h2 id="name"></h2>
+        <div id="price" class="price"></div>
+      </div>
+
+      <div id="desc" class="announcement"></div>
+
+      <div class="parameter border-bottom">
+        <ul>
+          <li class="border-top"><span class="r" id="type"></span>水域</li>
+          <li class="border-top"><span class="r" id="acreage"></span>面积</li>
+          <li class="border-top"><span class="r" id="fishing_pos"></span>钓位</li>
+          <li class="border-top"><span class="r" id="depth"></span>水深</li>
+          <li class="border-top"><span class="r" id="fishs"></span>鱼种</li>
+        </ul>
+        <div class="assort hidden">
+          <ul id="others" class="clearfix">
+          </ul>
+        </div>
+      </div>
+
+      <div id="pingjiaLan" class="assess border-top">
+        <div class="hd border-bottom">
+          <div class="r" id="commentMore">更多评价&gt;</div>
+          鱼友评价<small id="comment"></small>
+        </div>
+        <div class="comment-list">
+         <ul>
+           <li class="border-bottom">
+             <div class="avatar-round"><img src="../images/avatar.png" alt=""></div>
+             <div class="info">
+                <h3 id="cname"></h3>
+                <div class="star-time">
+                  <div class="stars" id="star">
+                  </div>
+                  <span class="time">2015-04-24</span>
+                </div>
+                <div class="content" id="comentText">
+                  ......
+                </div>
+                <ul class="pics" id="cpics">
+                  <li class="img-box"><img src="../temp/fish.jpg" alt=""></li>
+                  <li class="img-box"><img src="../temp/fish.jpg" alt=""></li>
+                  <li class="img-box"><img src="../temp/fish.jpg" alt=""></li>
+                </ul>
+             </div>
+             <i class="icon-m icon-report"></i>
+           </li>
+         </ul>
+         <div class="seal"></div>
+        </div>
+      </div>
+
+      <div class="shop-data border-top">
+        <ul class="score border-bottom">
+          <li>服务：<span class="num" id="service"></span><i class="degree-badage"></i></li>
+          <li>鱼情：<span class="num" id="fish"></span><i class="degree-badage"></i></li>
+          <li>环境：<span class="num" id="env"></span><i class="degree-badage"></i></li>
+        </ul>
+        <ul class="data border-bottom">
+          <li class="border-right"><div id="consume_favorite"></div>收藏人数</li>
+          <li class="border-right"><div id="consume_month"></div>月销量</li>
+          <li><div id="consume_total"></div>累计销量</li>
+        </ul>
+        <div class="address border-bottom">
+          <div>地址：<span id="address"></span> <span class="r" id="distance"></span></div>
+        </div>
+        <ul class="contacts border-bottom">
+          <li class="border-right"><a href="javascript:;" id="callTel" style="color:#555;"><i class="icon-m icon-phone"></i>电话</a></li>
+          <li id="navMap"><i class="icon-m icon-go"></i>地图</li>
+        </ul>
+      </div>
+
+
+      <div class="forecast border-top">
+        <div class="inner border-bottom">
+          <div class="index border-right">
+              <strong><span id="wea-Num"></span><i class="degree-badage" id="wea-exponent"></i></strong>
+              <div>钓点·钓鱼指数</div>
+          </div>
+          <div class="r"><!-- <i id="goTools" class="icon-m icon-arrow-right"></i> --></div>
+          <div class="content">
+            <h2 id="wea-evaluation"></h2>
+            <span id="wea-other"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="parameter border-bottom">
+        <ul>
+          <li class="border-top"><div class="r" id="pos_type"></div>选钓位</li>
+          <li class="border-top"><div class="r" id="limit_len"></div>限杆长</li>
+          <li class="border-top"><div class="r" id="pick_wo"></div>打窝</li>
+          <li class="border-top"><div class="r" id="live_bait"></div>活饵 </li>
+          <li class="border-top"><div class="r" id="use_insect"></div>用虫</li>
+        </ul>
+      </div>
+
+
+      <div class="useraction border-top">
+        <ul class="clearfix">
+            <!-- 如果是官方认证，则没有举报按钮 -->
+            <!-- <li class="report border-right"><i class="icon-m icon-report"></i>举报</li> -->
+            <li class="favior border-right"  id="favorited">
+              <i class="icon-m icon-star"></i>
+              <i class="icon-m icon-refresh2 rotate hidden"></i>收藏
+            </li>
+            <li class="buy" id="coupon">
+              <i class="icon-m icon-tag"></i>立即获取<span id="couponValue"></span>元代金券
+            </li>
+        </ul>
+      </div>
+
+      
+      
+      </div>
+  </div>
+
+  <div id="shareMask" class="mask hidden"></div>
+  <!-- 分享弹窗 -->
+  <div id="sharePop" class="share-pop border-top" style="bottom:-80px;">
+    <ul>
+      <li class="border-right">
+        <i class="icon-m icon-wechat"></i>
+        <div class="name">微信聊天</div>
+      </li>
+      <li class="border-right">
+        <i class="icon-m icon-friends-circle"></i>
+        <div class="name">朋友圈</div>
+      </li>
+      <li class="border-right">
+        <i class="icon-m icon-qq"></i>
+        <div class="name">QQ聊天</div>
+      </li>
+      <li>
+        <i class="icon-m icon-qzone"></i>
+        <div class="name">QQ空间</div>
+      </li>
+    </ul>
+  </div>
+  <!-- 分享弹窗 -->
+
+
+
+  <div id="popConsume" class="pop hidden">
+    <div class="pop-c">
+      <div class="pop-confirm">
+        <div id="consumeMask" class="mask"></div>
+        <div class="content">
+          <div class="info">
+            确认使用<span style="color: #ff8a00;"><i class="icon-m icon-gold"></i><span>10</span></span>金币，购买1张“<span id="couponTitle" class="color-success">东星垂钓园·20元抵价券</span>”吗？
+          </div>
+          <ul class="border-top">
+            <li id="consumeCancel" class="border-right">取消</li>
+            <li id="consumeGet" class="active">领取</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="poptask" class="pop hidden">
+    <div class="pop-c">
+      <div class="pop-confirm">
+        <div id="taskMask" class="mask"></div>
+        <div class="content">
+          <div class="info">
+            您的当前金币余额不足，是否去做任务，赚取金币？
+          </div>
+          <ul class="border-top">
+            <li id="taskCancel" class="border-right">取消</li>
+            <li id="todoTask" class="active">去做任务</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script src="../script/swipe/swipe.js"></script>
+<script>
+  
+  apiready = function() {
+
+    var pondId = api.pageParam['pondId']; 
+    var location_lon = '', location_lat = '';
+    var datas;
+
+
+      
+    var bannerFilter = $api.dom('#bannerFilter');
+    $api.fixIos7Bar(bannerFilter);
+
+
+    getData('pondInfo', {'id' : pondId},  renderData);
+
+    function getData(name, params, callback) {
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        datas = data;
+        if(code === 0) {
+          callback(data);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+    $('#goBack').on('touchstart', function() {
+      api.closeWin();
+    })
+
+    // window.slider = new Slide({
+    //     target: $('#slider ul li'),
+    //     wrapWidth: '500%',
+    //     controller:false,
+    //     autoPlay: 0,
+    //     event: {
+    //       'init':function(){
+    //         $("#sliderTotal").text(this.target.length);
+    //       },
+    //       'change': function(){
+    //         $("#sliderNum").text(this.curPage+1);
+    //       }
+    //     }
+    //   });
+
+
+    function initSwipe() {
+        // if(window.mySwipe) return;
+        var slide = $api.byId('slider');
+        $('#dotBox').find('li').eq(0).addClass('active');
+        window.mySwipe = Swipe(slide, {
+          // startSlide: 2,
+          // speed: 400,
+          auto: 3000,
+          continuous: true,
+          disableScroll: false,
+          stopPropagation: true,
+          callback: function(index, elem) {
+            $('#dotBox').find('li.active').removeClass('active');
+            $('#dotBox').find('li').eq(index).addClass('active');
+          },
+          transitionEnd: function(index, elem) {
+          }
+        });
+     }
+
+
+     //抵用券跳转
+     $('#ticket').on('click', function() {
+      var user = $api.getStorage('user');
+      if($.isEmptyObject(user)) {
+        api.toast({
+          msg: '请先登录',
+          duration:2000,
+          location: 'middle'
+        });
+      }else{
+        api.openWin({
+          'name' : 'coupon',
+          'url' : './my/coupon.html'
+        });
+      }
+     });
+
+     //分享弹窗
+     $('#share').on('click',  function() {
+
+     });
+
+
+    function renderData(data) {
+      //钓点名称
+      $('#name').text(data['name']);
+      $('#spic').attr('src', data['logo']);
+
+      //电话
+      $('#callTel').attr('href','tel:'+ data['mobile']);
+
+      //经纬度
+      location_lon = data['location_lon'];
+      location_lat = data['location_lat'];
+
+
+      //收费模式   抵用券
+      //1 免费   3天塘  2斤塘
+      if(!data['price']) {
+        $('#price').html('<span class="now"><b>未知</b></span>');
+      }else{
+        if(data['discount_price']) {
+          if(data['charge_type'] == 3) {  //天塘
+            $('#price').html('<span class="now"><strong>&yen;'+data['discount_price']+'</strong>/天</span> <span class="ago">'+data['price']+'/天</span>');
+          }else if(data['charge_type'] == 2) { //斤塘
+            $('#price').html('<span class="now"><strong>&yen;'+data['discount_price']+'</strong>/斤</span> <span class="ago">'+data['price']+'/斤</span>');
+          }else if(data['charge_type'] == 1){  //免费
+            $('#price').html('<span class="now"><b>免费</b></span>');
+          }else{
+            $('#price').html('<span class="now"><b>未知</b></span>');
+          }
+        }else{
+          if(data['charge_type'] == 3) {  //天塘
+            $('#price').html('<span class="now"><b>&yen;'+data['price']+'</b>/天</span>');
+          }else if(data['charge_type'] == 2) { //斤塘
+            $('#price').html('<span class="now"><b>&yen;'+data['price']+'</b>/斤</span>');
+          }else if(data['charge_type'] == 1){  //免费
+            $('#price').html('<span class="now"><b>免费</b></span>');
+          }else{
+            $('#price').html('<span class="now"><b>未知</b></span>');
+          }
+        }
+      }
+      
+
+      //认证等级
+
+      // 9 官方认证
+      // 5 钓友认证
+      // 3 电话认证
+      // 0 未认证
+
+      if(data['level'] == 9) {
+        $('#level').find('img').attr('src','../images/auth-lv-1.png');
+        $('#level').find('div').text('官方认证');
+      }else if(data['level'] == 5) {
+        $('#level').find('img').attr('src','../images/auth-lv-2.png');
+        $('#level').find('div').text('钓友认证');
+      }else if(data['level'] == 3){
+        $('#level').find('img').attr('src','../images/auth-lv-3.png');
+        $('#level').find('div').text('电话认证');
+      }else{
+        $('#level').find('img').attr('src','../images/auth-lv-4.png');
+        $('#level').find('div').text('未认证');
+      }
+
+      // 1:池塘,2:江河,3:水库
+      $('#type').text(data['type_name']);
+      if(data['acreage']) {
+        $('#acreage').text(data['acreage']+'亩');  
+      }else{
+        $('#acreage').text('未知');  
+      }
+      
+      if(data['fishing_pos']) {
+        $('#fishing_pos').text(data['fishing_pos']+'个');  
+      }else{
+        $('#fishing_pos').text('未知');  
+      }
+
+      if(data['depth']) {
+        $('#depth').text(data['depth']+'米');  
+      }else{
+        $('#depth').text('未知');  
+      }
+
+      $('#fishs').text(data['fishs']?data['fishs'] : '未知');
+
+      $('#consume_favorite').text(data['stat']['favorite']);
+      $('#consume_month').text(data['stat']['consume_month']);
+      $('#consume_total').text(data['stat']['consume_total']);
+
+
+      if(data['guest_room']) {
+        $('#guest_room').removeClass('hidden');
+      }
+      if(data['catering']) {
+        $('#catering').removeClass('hidden');
+      }
+      if(data['chess_room']) {
+        $('#chess_room').removeClass('hidden');
+      }
+      if(data['parking']) {
+        $('#parking').removeClass('hidden');
+      }
+
+      if(!data['desc']) {
+        $('#desc').addClass('hidden');
+      }else{
+        $('#desc').text(data['desc'] || '暂无描述');
+      }
+
+
+      $('#service').text(parseInt(data['pond_rate']['service']));
+      if(data['pond_rate']['service'] > data['all_rate']['service']) {
+        $('#service').next().text('高').addClass('high');
+        $('#service').addClass('high');
+      }else if(data['pond_rate']['service'] < data['all_rate']['service']){
+        $('#service').next().text('低').addClass('low');
+        $('#service').addClass('low');
+      }else{
+        $('#service').next().text('中').addClass('medium');
+        $('#service').addClass('medium');
+      }
+
+      $('#fish').text(parseInt(data['pond_rate']['fish']));
+      if(data['pond_rate']['fish'] > data['all_rate']['fish']) {
+        $('#fish').next().text('高').addClass('high');
+        $('#fish').addClass('high');
+      }else if(data['pond_rate']['fish'] < data['all_rate']['fish']){
+        $('#fish').next().text('低').addClass('low');
+        $('#fish').addClass('low');
+      }else{
+        $('#fish').next().text('中').addClass('medium');
+        $('#fish').addClass('medium');
+      }
+
+      $('#env').text(parseInt(data['pond_rate']['env']));
+      if(data['pond_rate']['env'] > data['all_rate']['env']) {
+        $('#env').next().text('高').addClass('high');
+        $('#env').addClass('high');
+      }else if(data['pond_rate']['env'] < data['all_rate']['env']){
+        $('#env').next().text('低').addClass('low');
+        $('#env').addClass('low');
+      }else{
+        $('#env').next().text('中').addClass('medium');
+        $('#env').addClass('medium');
+      }
+      
+      
+      //住宿  餐饮  棋牌  停车  已售
+      var othersHtmlStr = '';
+      if(data['guest_room']) {
+        othersHtmlStr += '<li><i class="icon-m icon-checked"></i>住宿</li>';
+      }
+      if(data['catering']) {
+        othersHtmlStr += '<li><i class="icon-m icon-checked"></i>餐饮</li>'; 
+      }
+      if(data['chess_room']) {
+        othersHtmlStr += '<li><i class="icon-m icon-checked"></i>棋牌</li>'; 
+      }
+      if(data['parking']) {
+        othersHtmlStr += '<li><i class="icon-m icon-checked"></i>餐饮</li>'; 
+      }
+      othersHtmlStr += '<li><i class="icon-m icon-checked"></i>已售'+data['stat']['consume_total']+'</li>'
+      $('#others').html(othersHtmlStr);
+
+      //====================鱼友评价=========================
+      if(data['comment'].length < 1) {
+        $('#pingjiaLan').addClass('hidden');
+      }else{
+        try{
+          $('#cavatar').attr('src',data['comment']['u']['avatar']);
+        }catch(e){}
+        $('#cname').text(data['cname']);
+        var htmlStar = '';
+        for(var i=0; i<Number(data['total']); i++) {
+          htmlStar += '<i class="icon-m icon-star2"></i>';
+        }
+        $('#star').html(htmlStar);
+        $('#comment').text('('+data['comment']['total_num'] || 0+')');
+        $('#comentText').text(data['comment']['comment']);
+      }
+
+      $('#commentMore').on('click', function() {
+        api.openWin({
+          'name' : 'comment-list',
+          'url' : './comment-list.html',
+          'pageParam' : {'pondId' : pondId}
+        })
+      });
+
+      //天气跳转
+      // $('#goTools').on('click', function() {
+        
+      // });
+
+      //====================鱼友评价=========================
+      var htmlStr = '';
+      for(var i=0; i<data['pics'].length; i++) {
+        htmlStr += '<img src="'+data['pics'][i]+'" alt="">'
+      }
+      $('#cpics').html(htmlStr);
+      initSwipe();
+
+      //钓点指数
+      var num = data['weather']['fishing_forecast']? data['weather']['fishing_forecast'] : 0;
+      $('#wea-Num').text(num);
+      
+      if(data['weather']['fishing_forecast'] >= 60) {
+        $('#wea-exponent').addClass('high').html('高');
+      }else if(data['weather']['fishing_forecast'] < 60 && data['weather']['fishing_forecast'] >= 30){
+        $('#wea-exponent').addClass('medium').html('中');
+      }else{
+        $('#wea-exponent').addClass('low').html('低');
+      }
+
+
+
+      if(data['weather']['weather_idx'] === '高') {
+        $('#wea-exponent').addClass('high');
+      }else if(data['weather']['weather_idx'] === '低') {
+        $('#wea-exponent').addClass('low');
+      }else{
+        $('#wea-exponent').addClass('medium');
+      }
+
+      $('#wea-evaluation').text(data['weather']['fishing_forecast_info']);
+      $('#wea-other').text(data['weather']['text'] +'，'+ data['weather']['wind_direction'] +'，'+data['weather']['wind_scale']+'级。');
+
+      //店主
+      $('#boss').text(data['boss']);
+      $('#address').text(data['address']);
+      $('#distance').text(data['distance']);
+
+
+      if(data['pos_type'] == 1) {
+        $('#pos_type').text('自选');
+      }else if(data['pos_type'] == 2) {
+        $('#pos_type').text('抽签');
+      }else{
+        $('#pos_type').text('未知');
+      }
+
+      if(data['limit_len']) {
+        $('#limit_len').text(data['limit_len']+'米');  
+      }else{
+        $('#limit_len').text('未知');  
+      }
+
+      if(data['pick_wo'] === null) {
+        $('#pick_wo').text('未知');
+      }else{
+        $('#pick_wo').text( data['pick_wo']? '允许' : '不允许');
+      }
+
+      if(data['live_bait'] === null) {
+        $('#live_bait').text('未知');
+      }else{
+        $('#live_bait').text( data['live_bait']? '允许' : '不允许');
+      }
+
+      if(data['use_insect'] === null) {
+        $('#use_insect').text('未知');
+      }else{
+        $('#use_insect').text( data['use_insect']? '允许' : '不允许');
+      }
+
+      if(data['coupon']) {
+        $('#coupon').removeClass('hidden').attr('couponId', data['coupon']['id']);
+        $('#couponValue').text(data['coupon']['value']);
+
+        $('#couponTitle').text(data['name']+'·'+data['coupon']['value']+'元抵价券');
+      }else{
+        $('#coupon').addClass('hidden');
+        $('#favorited').css('width', '100%');
+      }
+
+      //判断用户是否领取抵用券
+      if(data['u_coupon']) {
+        $('#coupon').html('<i class="icon-m icon-tag"></i>立即使用').data('use', true);
+      }
+
+      if(data['is_favorite']) {
+        $('#favorited').find('i').eq(0).removeClass('icon-star').addClass('icon-star-fill');
+      }else{
+        $('#favorited').find('i').eq(0).removeClass('icon-star-fill').addClass('icon-star');
+      }
+
+    }
+
+    window.srollEvents = function(top)  {
+      // if($('#consumeMask').is(':visible') || $('#taskMask').is(':visible')){
+      //   $('body').css('overflow' ,'hidden');
+      // }else{
+      //   // $('body').css('overflow' ,'auto');
+      // }
+
+      if(top >= 215) {
+        $('#bannerFilter').addClass('top-btn-ani');
+      }else{
+        $('#bannerFilter').removeClass('top-btn-ani');
+      }
+    }
+
+    $('#favorited').on('click', function() {
+      var user = $api.getStorage('user');
+      if(!$.isEmptyObject(user)) {
+        $('#favorited i').eq(0).addClass('hidden');
+        $('#favorited i.rotate').removeClass('hidden');
+        sendAjax(URLConfig('favorite'), {'type' : 1, 'target' : pondId}, function(data, code, msg) {
+          $('#favorited i.rotate').addClass('hidden');
+          $('#favorited i').eq(0).removeClass('hidden');
+          if(code === 0) {
+            if(msg === 'add') {
+              //收藏成功！
+              msg = '收藏成功';
+              $('#favorited').find('i').removeClass('icon-star').addClass('icon-star-fill');
+            }else{
+              msg = '取消成功';
+              $('#favorited').find('i').removeClass('icon-star-fill').addClass('icon-star');
+            }
+
+            api.toast({
+              msg: msg,
+              duration:2000,
+              location: 'middle'
+            });
+          }else{
+            api.toast({
+              msg: msg || '收藏失败，稍后再试',
+              duration:2000,
+              location: 'middle'
+            });
+          }
+        });
+      }else{
+        api.toast({
+          msg: '请先登录',
+          duration:2000,
+          location: 'middle'
+        });
+      }
+    });
+
+    //立即领取按钮
+    $('#coupon').on('click',  function() {
+      if($(this).data('use')) { //立即使用
+        api.openWin({
+          'name' : 'coupon',
+          'url' : './my/coupon.html'
+        });
+      }else{
+        var user = $api.getStorage('user');
+        if(!$.isEmptyObject(user)) {
+          $('#popConsume').removeClass('hidden');
+          $('#popConsume').find('.pop-c').addClass('zoom-in-out');
+        }else{
+          api.toast({
+            msg: '请先登录',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      }
+      
+    });
+  
+    // 点击领取
+    $('#consumeGet').on('click',  function() {
+      var couponId = $('#coupon').attr('couponId');
+      sendAjax(URLConfig('couponGet'), {'coupon_id' : couponId}, function(data, code, msg) {
+        if(code === 0) {
+          $('#popConsume').addClass('hidden');
+          if(data['gold']) {
+            openRewarbTip({
+              'gold' : data['gold'],
+              'exp' : data['exp'],
+              'tasks' : data['tasks'],
+              'name' : '首次兑换抵价券'
+            });
+          }
+          api.toast({
+            msg: '领取成功！',
+            duration:2000,
+            location: 'middle'
+          });
+
+          $('#coupon').html('<i class="icon-m icon-tag"></i>立即使用').data('use', true);
+
+        }else if(code == -5){
+          //当前金币不足
+          $('#poptask').removeClass('hidden');
+          $('#popConsume').addClass('hidden');
+          
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    });
+
+
+    //取消
+    $('#taskCancel').on('click',  function() {
+      $('#popConsume, #poptask').addClass('hidden');
+    });
+
+    //去做任务
+    $('#todoTask').on('click',  function() {
+      api.openWin({
+        'name' : 'mission',
+        'url' : './my/mission.html'
+      });
+    });
+
+
+    //取消  领用
+    $('#consumeCancel').on('click', function() {
+      $('#popConsume').addClass('hidden');
+    });
+
+    //使用
+    $('#consumeUse').on('click',  function() {
+      sendAjax(URLConfig('couponGet'), null, function(data, code, msg) {
+        if(code === 0) {
+          callback(data);
+        }else if(code === 1){
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+          $('#loadDiv, .wrap').addClass('hidden');
+          $('#loadDivErr').removeClass('hidden');
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+
+        }
+      });
+    });
+
+    //地图导航
+    $('#navMap').on('click',  function() {
+      var data = {
+        'id' : datas['id'],
+        'name' : datas['name'],
+        'discount_price' : datas['discount_price'],
+        'charge_type' : datas['charge_type'],
+        'type' : datas['type'],
+        'level' : datas['level'],
+        'spic' : datas['spic'],
+        'lat' : datas['location_lat'],
+        'lng' : datas['location_lon']
+      }
+      $api.setStorage('whichMap', 'map2');
+      $api.setStorage('pondId', datas['id']);
+      $api.setStorage('pondDetailObj', data);
+
+      api.openWin({
+        'name' : 'map',
+        'url' : './map.html',
+        'bounces' : false,
+        'pageParam' : data,
+        'vScrollBarEnabled' : false,
+        'hScrollBarEnabled' : false
+      });
+
+
+
+    });
+    
+    var isSharePopOpend = false;
+    $('#share').on('click', function() {
+      if(isSharePopOpend) {
+        $('#shareMask').trigger('click');
+        return;
+      };
+      $('#shareMask').height($('.shop-detail').height());
+      $('#shareMask').removeClass('hidden');
+      $('#sharePop').animate({'bottom':'0'}, 300,  function() {
+        isSharePopOpend = true;
+      })
+    });
+
+    $('#shareMask').on('click',  function() {
+      $('#sharePop').animate({'bottom':'-80px'}, 300,  function() {
+        isSharePopOpend = false;
+        $('#shareMask').addClass('hidden');
+      });
+    });
+
+
+  }
+
+  
+</script>
+
+</html>

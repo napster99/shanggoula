@@ -1,0 +1,34 @@
+.login{
+  height: 100%;
+  background: #525252 url(../images/login-way.jpg) no-repeat;
+  background-size: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-way{
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  padding-bottom: 15px;
+}
+
+.login-way ul{
+  margin: auto;
+  width: 92%;
+}
+
+.login-way li{
+  border-radius: 5px;
+  background-color: rgba(255,255,255,.6);
+  color: #222;
+  height: 40px;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 40px;
+  text-align: center;
+}
+
+
+
+

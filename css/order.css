@@ -1,0 +1,51 @@
+.order-list{
+
+}
+
+.order-list li{
+  border-bottom:1px solid #ddd;
+  background-color: #fff;
+  padding: 13px 15px;
+  height: 65px;
+}
+
+.order-list .img-box{
+  width: 38px;
+  height: 38px;
+  border-radius: 100px;
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  float: left;
+  overflow: hidden;
+}
+
+.order-list .info{
+  margin: 2px 65px 0;
+
+}
+
+.order-list .info .name{
+  font-size: 14px;
+}
+
+.order-list .info .time{
+  color: #aaa;
+  margin-top: 7px;
+}
+
+
+.order-list li .r{
+  width: 60px;
+  height: 100%;
+  text-align: center;
+}
+
+.order-list .r .price{
+  font-size: 16px;
+}
+
+.order-list .r .status{
+  color: #aaa; 
+  margin-top: 7px;
+}
+

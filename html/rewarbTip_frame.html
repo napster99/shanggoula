@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>任务_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body style="background-color:transparent;">
+<div class="wrap">
+
+<div class="pop">
+  <div class="mask"></div>
+
+  <div class="pop-c">
+
+
+  <div class="pop-mission">
+    <div class="content">
+      <div class="info border-bottom">
+        <div class="mission-icon"></div>
+        <div class="mission-name">分享钓点</div>
+        <div class="mission-award">
+          <span id="gold"><i class="icon-m icon-gold"></i><span></span></span>
+          <span id="exp"><i class="icon-m icon-level"></i><span></span></span>
+        </div>
+        <div class="mission-desc">完成任务，赚取金币，兑换好礼！</div>
+      </div>
+      <div id="todo" class="mission-list-cando hidden">
+        <h3>今天还可以完成以下任务</h3>
+        <ol id="todoList">
+        </ol>
+      </div>
+      <ul class="actions border-top">
+        <li id="cancel" class="border-right">知道了</li>
+        <li id="toTask" class="active">去做任务</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- 
+  <div class="pop-confirm">
+    <div class="mask"></div>
+    <div class="content">
+      <div class="info">
+        确认使用1张“<span class="color-success">东星垂钓园·20元抵价券</span>”吗？
+      </div>
+      <ul class="border-top">
+        <li class="border-right">知道了</li>
+        <li class="active">去做任务</li>
+      </ul>
+    </div>
+  </div>
+ -->
+
+
+
+</div>
+</body>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  apiready = function() {
+     $('body').on('click', function() {
+
+      // api.execScript({
+      //   frameName: 'my',
+      //   script: 'getWealthInfo();'
+      // });
+      
+      api.closeFrame();
+    });
+
+    var gold = api.pageParam['gold']; 
+    var exp = api.pageParam['exp']; 
+    var name = api.pageParam['name']; 
+
+
+    var tasks = api.pageParam['tasks'];
+
+    if(tasks.length == 0) {
+      $('#todo').addClass('hidden');
+      $('.info').removeClass(' border-bottom');
+    }else{
+      $('.info').addClass(' border-bottom');
+      var htmlStr = '';
+      for(var i=0; i<tasks.length; i++) {
+        htmlStr += '<li>'
+                +'  <span class="r">'
+                if(tasks[i]['reward']) {
+                  htmlStr += '<span><i class="icon-m icon-gold"></i>+'+tasks[i]['reward']+'</span>'
+                }
+                if(tasks[i]['reward_exp']) {
+                  htmlStr += '<span><i class="icon-m icon-level"></i>+'+tasks[i]['reward_exp']+'</span>'
+                }
+                htmlStr += '  </span>'
+                +'  <span class="name">'+tasks[i]['name']+'</span>'
+                +'</li>'
+      }
+
+      $('#todoList').html(htmlStr);
+      $('#todo').removeClass('hidden');
+    }
+
+
+    $('.mission-name').text(name);
+    $('#gold').find('span').text('+'+gold);
+    if(exp) {
+      $('#exp').find('span').text('+'+exp);
+    }else{
+      $('#exp').addClass('hidden');
+    }
+
+    $('#isee').on('touchstart', function() {
+      api.closeFrame();
+    })
+
+    
+    
+          // <li>
+          //   <span class="r"><i class="icon-m icon-gold"></i>+10</span>
+          //   <span class="name">拿一次坑冠</span>
+          // </li>
+    
+    $('#toTask').on('click',  function() {
+      api.openWin({
+        'name' : 'mission',
+        'url' : './my/mission.html'
+      });
+      api.closeFrame();
+      return false;
+    });
+
+    $('#cancel').on('click',  function() {
+      api.closeFrame();
+    });
+
+  }
+</script>
+</html>

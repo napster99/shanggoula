@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+
+  
+
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/article.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>知道_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body>
+<div class="wrap hidden" id="conDiv">
+  <!-- 文章列表 -->
+  <div class="article-list">
+    <ul id="infoList">
+    </ul>
+  </div>
+  <!-- 文章列表end -->
+</div>
+
+  <div class="load-page wait"></div>
+</body>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var isEnd = false, isAjaxing = false;
+    var mapInfo = $api.getStorage('mapInfo');
+    var condicationObj = {
+      'page' : 1,
+      'page_size' : 10,
+      'area_code' : mapInfo['parent_code']
+    }
+
+    function getListData(name, params, callback, first) {
+      if(first) {
+        showLoadDiv(true, $('#conDiv'));  
+      }else{
+        showButtonLoadDiv(true, $('#conDiv'));  
+      }
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+       
+        if(code === 0) {
+          callback(data, first);
+        }else{
+          api.toast({
+            msg: '请求数据出错(' + msg+')',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+    getListData('newsList', condicationObj, function(data, first) {
+      renderData(data,first);
+    }, true);
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+       isEnd = false;
+       condicationObj['page'] = 1;
+       isAjaxing = false;
+       $('#infoList').html('');
+       getListData('newsList', condicationObj, function(data,first) {
+         renderData(data, first);
+       }, true);
+    });
+
+
+     //下拉加载
+    api.addEventListener({
+      name: 'scrolltobottom'
+    }, function(ret, err){
+      if(isEnd) {
+        showButtonLoadDiv(false,$('#conDiv'));
+        api.toast({
+          msg: '没有更多数据了',
+          duration:2000,
+          location: 'middle'
+        });
+      }
+      if(!isEnd && !isAjaxing) {
+        showButtonLoadDiv(false,$('#conDiv'));
+        ++condicationObj['page'];
+        getListData('newsList', condicationObj ,renderData);
+      }
+    });
+
+
+    //数据渲染
+    function renderData(data, first) {
+      api.refreshHeaderLoadDone();
+      if(!first) {
+        showButtonLoadDiv(false,$('#conDiv'));
+      }
+
+ 
+      var arrs = data['list'], len = arrs.length, htmlStr = '';
+        for(var i=0; i<len; i++) {
+          try{
+
+            if(arrs[i]['style'] === 1) {
+              htmlStr += '<ul class="mes-list">'
+              htmlStr += getDomsWithData({
+                'url'   : arrs[i]['thumbs'][0]['url'],
+                'title' : arrs[i]['title'],
+                'views' : arrs[i]['area_views'] || arrs[i]['views'],
+                'id'    : arrs[i]['id']
+              }, 1);
+              htmlStr += '</ul>';
+            }else if(arrs[i]['style'] === 2) {
+              htmlStr += getDomsWithData({
+                'url'   : arrs[i]['thumbs']['url'],
+                'title' : arrs[i]['title'],
+                'views' : arrs[i]['area_views'] || arrs[i]['views'],
+                'id'    : arrs[i]['id']
+              }, 2);
+            }else if(arrs[i]['style'] === 3) {
+              htmlStr += getDomsWithData({
+                'url'   : [arrs[i]['thumbs'][0]['url'],arrs[i]['thumbs'][1]['url'],arrs[i]['thumbs'][2]['url']],
+                'title' : arrs[i]['title'],
+                'views' : arrs[i]['area_views'] || arrs[i]['views'],
+                'id'    : arrs[i]['id']
+              }, 3);
+            }
+          }catch(e){
+          }
+          
+
+        }
+        $('#infoList').append(htmlStr);
+
+        //智能填图
+        getImageSize();
+
+        if(data['next']) {
+          showButtonLoadDiv(true, $('#conDiv'));
+        }else{
+          isEnd = true;
+        }
+
+        if(first) {
+          showLoadDiv(false, $('#conDiv'));
+        }
+    }
+
+    //点击进入详细页
+    window.enterDetail = function(el) {
+      api.execScript({
+        name: 'index',
+        script: 'openInfoDetail("'+el.id+'");'
+      });
+    }
+
+  }
+  
+</script>
+</html>

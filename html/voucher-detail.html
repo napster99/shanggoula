@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/component.css">
+  <link rel="stylesheet" href="../css/form.css">
+  <link rel="stylesheet" href="../css/voucher-detail.css">
+  <link rel="stylesheet" href="../css/font-icon.css">
+  <title>抵用券详情_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body>
+<div class="wrap hidden">
+  <!-- 头部 -->
+  <div id="header" class="top-bar gray-style">
+    <div class="l" onclick="api.closeWin();">
+      <i class="icon-m icon-arrow-left"></i>返回
+    </div>
+    <div class="center-part">抵用券核销</div>
+  </div>
+  <!-- 头部 end-->
+
+  <div class="voucher-detail">
+    <div class="banner"><div><span id="name"></span><span id="price"></span>元抵用券</div></div>
+    <div class="price"><div class="img-box"><img id="shopCover" src="../temp/shop-cover.jpg"></div><span>￥</span><span name="price"></span></div>
+    
+    <div name="time" class="block">
+      <div class="hd">有效期</div>
+      <div class="bd" id="time">
+        2015/5/1 02:00 - 2015/5/31 12:00
+      </div>
+    </div>
+
+    <div name="cardId" class="block hidden">
+      <div class="hd">券码</div>
+      <div class="bd">
+        <div class="card-id" id="cardId">2331577</div>
+      </div>
+    </div>
+
+
+    <div name="serialNumber" class="block hidden">
+      <div class="hd">流水号</div>
+      <div class="bd">
+        <div class="r color-success">核销成功</div>
+        <span id="serialNumber">9128377726612</span>
+      </div>
+    </div>
+
+    <div name="exchange" class="block hidden">
+      <div class="hd">我的抵价券</div>
+      <div class="bd">
+        <p>您尚未拥有本店铺的抵价券，点击按钮兑换一张，立刻享受折扣！</p>
+        <button class="btn primary-button" id="exchange">兑换抵价券</button>
+      </div>
+    </div> 
+
+    <div name="useCoupon" class="block hidden">
+      <div class="hd">我的抵价券</div>
+      <div class="bd">
+        <p>您拥有1张本店<span id="selfPrice">20</span>元的抵价券</p>
+        <button class="btn primary-button" id="useCoupon">立刻使用抵价券</button>
+      </div>
+    </div>
+
+<!-- 有商户版之后
+    <div class="block">
+      <div class="hd">出示给钓场主</div>
+      <div class="bd">
+        <div class="card-id">券码：<span>2331577</span></div>
+        <div class="qr-code">
+          <div class="img-box">
+            <img src="../temp/qr-code.jpg">
+            <div class="status">该券已过期</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+ -->
+
+
+  </div>
+
+</div>
+  <div class="load-page wait"></div>
+
+
+</body>
+
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/common.js"></script>
+<script>
+  apiready = function() {
+    // 设置ios7的标题栏字体变亮，全局用一个就行了
+    api.setStatusBarStyle({
+      style: 'light'
+    });
+
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+
+
+    var pond_id = api.pageParam['pondId'];
+    var received = false;  //抵用券是否已领取
+    var coupon_id;
+    var token = '';
+
+
+    function getData(name, params, callback) {
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        if(code === 0) {
+          callback(data);
+        }else if(code === 1){
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+          $('#loadDiv, .wrap').addClass('hidden');
+          $('#loadDivErr').removeClass('hidden');
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+
+        }
+      });
+    }
+
+
+    getData('pondCoupon', {'pond_id' : pond_id}, renderData);
+
+    function renderData(data) {
+      coupon_id = data[0]['coupon_id'];
+      if(!data[0]['card_id']) {
+        //未领取
+        received = false;
+        getData('couponDetail', {'coupon_id' : data[0]['coupon_id']}, renderDetailData);
+      }else{
+        received = true;
+        getData('couponDetail', {'coupon_id' : data[0]['coupon_id'], 'card_id' : data[0]['card_id']}, renderDetailData);
+      }
+    }
+    
+    function renderDetailData(data) {
+      $('#name').text(data['pond']['name']);
+      $('#price').text(data['coupon']['disaccount']);
+      $('span[name=price]').text(data['coupon']['disaccount']);
+      $('#shopCover').attr('src', data['pond']['logo']);
+      $('#time').text(data['coupon']['expire']);
+
+      $('#serialNumber').text(data['coupon']['trade_no']);
+      if(received) {  //已领取
+        $('div[name=cardId]').removeClass('hidden');
+        $('#cardId').text(data['coupon']['card_id']);
+        token = data['coupon']['card_id'];
+        $('div[name=useCoupon]').removeClass('hidden');
+      }else{ //未领取
+        $('div[name=exchange]').removeClass('hidden');
+      }
+      
+      $('.wrap').removeClass('hidden');
+      $('#loadDivErr, #loadDiv').addClass('hidden');
+      
+    }
+
+
+    //exchange">兑换抵价券
+    $('#exchange').on('click',  function() {
+      getData('couponGet', {'coupon_id' : coupon_id}, function(data) {
+        token = data;
+        if(data['gold']) {
+          openRewarbTip({
+            'gold' : data['gold'],
+            'exp' : data['exp'],
+            'tasks' : data['tasks'],
+            'name' : '首次兑换抵价券'
+          });
+        }
+        $('div[name=exchange]').addClass('hidden');
+
+        $('div[name=cardId]').removeClass('hidden');
+        $('div[name=useCoupon]').removeClass('hidden');
+        $('#cardId').text(data);
+      });
+    });
+
+    //立刻使用 pond_id: 1   coupon_id: 2 
+    $('#useCoupon').on('click', function() {
+
+      api.confirm({
+        title: '提示框',
+        msg: '是否立即使用',
+        buttons:['确定', '取消']
+      },function(ret,err){
+        if(ret.buttonIndex == 1){
+          getData('consume', {'coupon_id' : coupon_id, 'pond_id' : pond_id, 'token' : token}, function(data) {
+            $('div[name=serialNumber]').removeClass('hidden');
+            $('div[name=useCoupon]').addClass('hidden');
+            $('#serialNumber').text(data['trade_no']);
+            if(data['gold']) {
+              openRewarbTip({
+                'gold' : data['gold'],
+                'exp' : data['exp'],
+                'tasks' : data['tasks'],
+                'name' : '首次兑换抵价券'
+              });
+            }else{
+              //跳转到订单详情页
+              api.openWin({
+                'name' : 'order-detail',
+                'url' : './my/order-detail.html',
+                'pageParam' : {'id' : data['id']}
+              });
+
+            }
+          });
+        }
+      });
+
+    });
+
+
+  }
+
+</script>
+</html>

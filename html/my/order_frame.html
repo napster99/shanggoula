@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <link rel="stylesheet" href="../../css/order.css">
+  <title>我的订单_上钩啦_找钓点，就用上钩啦</title>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 抵用券列表 -->
+  <div class="order-list">
+    <ul id="orderList" class="hidden">
+      
+    </ul>
+  </div>
+  <!-- 抵用券列表end -->
+
+  <div class="load-page wait"></div>
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var page_size = 15;
+
+
+    var isEnd = false, isAjaxing = false;
+    var condicationObj = {
+      'page' : 1,
+      'page_size' : page_size
+    }
+
+
+    function getListData(name, params, callback, first) {
+      if(first) {
+        showLoadDiv(true, $('#orderList'));  
+      }else{
+        showButtonLoadDiv(true, $('#orderList'), '../../images/loadButton.gif');  
+      }
+      isAjaxing = true;
+
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        isAjaxing = false;
+        api.refreshHeaderLoadDone();
+        if(code === 0) {
+          callback(data, first);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+
+    getListData('orderList', condicationObj, function(data, first) {
+      renderData(data,first);
+    }, true);
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+       isEnd = false;
+       condicationObj = {
+        'page' : 1,
+        'expired' : 0,
+        'page_size' : page_size
+       }
+       isAjaxing = false;
+       $('#orderList').html('');
+      getListData('orderList', condicationObj, renderData, true);
+    });
+
+
+    //下拉加载
+    api.addEventListener({
+      name: 'scrolltobottom'
+    }, function(ret, err){
+      if(!isEnd && !isAjaxing) {
+        showButtonLoadDiv(false, $('#orderList'), '../../images/loadButton.gif');
+        ++condicationObj['page'];
+        getListData('orderList', condicationObj ,renderData);
+      }
+    });
+
+    function renderData(data, first) {
+      var htmlStr = '';
+      for(var i=0; i<data.length; i++) {
+          htmlStr += '  <li onclick="enterDetail(this);" id="'+data[i]['id']+'" tradeNo="'+data[i]['trade_no']+'">'
+                  +'    <div class="img-box"><img src="'+data[i]['seller']['logo']+'"></div>'
+                  +'    <div class="r">'
+                  +'      <div class="price">-'+data[i]['coupon']+'</div>'
+                  +'      <div class="status">'+data[i]['message']+'</div>'
+                  +'    </div>'
+                  +'    <div class="info">'
+                  +'      <h3 class="name">'+data[i]['name']+'</h3>'
+                  +'      <div class="time">'+data[i]['dateline']+'</div>'
+                  +'    </div>'
+                  +'  </li>'
+      }
+      if(first) {
+        $('#orderList').html(htmlStr);
+      }else{
+        $('#orderList').append(htmlStr);
+      }
+
+      if(first) {
+        showLoadDiv(false, $('#orderList'));
+      }
+
+      showButtonLoadDiv(false, $('#orderList'), '../../images/loadButton.gif');
+      if(data.length < page_size) {
+        isEnd = true;
+        if(first && data.length === 0) {
+          showNoData($('#orderList'));
+        }else if(!first){
+          api.toast({
+            msg: '没有更多数据了',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+        
+      }else{
+        showButtonLoadDiv(true, $('#orderList'), '../../images/loadButton.gif');
+      }
+    }
+
+    //进入详情页
+    window.enterDetail = function(el) {
+      api.openWin({
+        'name' : 'order-detail',
+        'url' : './order-detail.html',
+        'pageParam' : {'id' : el.id}
+      });
+    }
+
+
+  }
+
+</script>
+</html>

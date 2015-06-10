@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/comment.css">
+  <link rel="stylesheet" href="../../css/form.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <title>评价_上钩啦_找钓点，就用上钩啦</title>  
+</head>
+<body>
+<div class="wrap">
+<div class="reviews-write">
+  <div class="note note-warning">
+    <p>
+      评价满【30字+4图】且内容丰富优质，有机会赢100金币，天天送不停！（评价需要1-2个审核日）
+    </p>
+  </div>
+  <!-- /note -->
+  <div class="intro clearfix">
+      <div class="img-box"><img id="logo" src=""></div>
+      <h2 id="pondName"></h2>
+      <div class="price" id="price"></div>
+  </div>
+  <!-- /intro -->
+  <div id="level" class="level clearfix">
+    <label>
+      <input type="radio" name="total" value="1">
+      <span class="star">★</span>
+      <span>差</span>
+    </label>
+    <label>
+      <input type="radio" name="total" checked value="2">
+      <span class="star">★</span>
+      <span>一般</span>
+    </label>
+    <label>
+      <input type="radio" name="total"  value="3">
+      <span class="star">★</span>
+      <span>满意</span>
+    </label>
+    <label>
+      <input type="radio" name="total" value="4">
+      <span class="star">★</span>
+      <span>非常满意</span>
+    </label>
+    <label>
+      <input type="radio" name="total" value="5">
+      <span class="star">★</span>
+      <span>无可挑剔</span>
+    </label>
+  </div>
+  <div class="comment">
+    <dl class="clearfix">
+      <dt>鱼情</dt>
+      <dd id="fish">
+        <label><input value="1" type="checkbox"><i class="icon-m icon-face1"></i></label>
+        <label><input value="2" type="checkbox"><i class="icon-m icon-face2"></i></label>
+        <label><input value="3" type="checkbox"><i class="icon-m icon-face3"></i></label>
+        <label><input value="4" type="checkbox"><i class="icon-m icon-face4"></i></label>
+        <label><input value="5" type="checkbox"><i class="icon-m icon-face5"></i></label>
+      </dd>
+    </dl>
+     <dl class="clearfix">
+      <dt>服务</dt>
+      <dd id="service">
+        <label><input value="1" type="checkbox"><i class="icon-m icon-face1"></i></label>
+        <label><input value="2" type="checkbox"><i class="icon-m icon-face2"></i></label>
+        <label><input value="3" type="checkbox"><i class="icon-m icon-face3"></i></label>
+        <label><input value="4" type="checkbox"><i class="icon-m icon-face4"></i></label>
+        <label><input value="5" type="checkbox"><i class="icon-m icon-face5"></i></label>
+      </dd>
+    </dl>
+     <dl class="clearfix">
+      <dt>环境</dt>
+      <dd id="env">
+        <label><input value="1" type="checkbox"><i class="icon-m icon-face1"></i></label>
+        <label><input value="2" type="checkbox"><i class="icon-m icon-face2"></i></label>
+        <label><input value="3" type="checkbox"><i class="icon-m icon-face3"></i></label>
+        <label><input value="4" type="checkbox"><i class="icon-m icon-face4"></i></label>
+        <label><input value="5" type="checkbox"><i class="icon-m icon-face5"></i></label>
+      </dd>
+    </dl>
+  </div>
+  <!-- /comment -->
+  <div class="write clearfix">
+    <div class="l">
+      <i class="icon-m icon-record"></i>
+    </div>
+    <div class="c">
+      <textarea id="commentText" cols="38" id="writeComment" rows="3" placeholder="鱼情如何，服务周到吗，环境如何？（写够15字，才是好同志~）"></textarea>
+    </div>
+    <div class="tip">
+      <span class="status"><span id="curNumStatus">0</span>/15</span>
+      评价满<b>15</b>字即可领取<b>100</b>金币噢~
+    </div>
+  </div>
+  <!-- /write -->
+  <div class="upload">
+    <ul id="picList" class="clearfix">
+      <li>
+        <div class="img-box">
+          +
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="actions">
+    <ul>
+      <!-- <li>匿名评价 <span class="r onoff"><label><i></i></label></span></li> -->
+      <li>立即分享给小伙伴</li>
+      <li class="clearfix">
+          <span>
+            <i class="icon-m icon-wechat"></i>
+            微信
+          </span>
+          <span>
+            <i class="icon-m icon-wechat"></i>
+            朋友圈
+          </span>
+          <span>
+            <i class="icon-m icon-wechat"></i>
+            QQ
+          </span>
+          <span>
+            <i class="icon-m icon-wechat"></i>
+            QQ空间
+          </span>
+      </li>
+    </ul>
+  </div>
+
+  <button id="writeComment" class="btn primary-button" style="margin:0 auto; width:98%;">评价</button>
+</div>
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+    var data = api.pageParam;
+
+
+    function renderData() {
+      //收费模式   抵用券
+      if(data['charge_type'] === 1) {  //天塘
+        $('#price').html('<span class="now"><b>&yen;'+data['discount_price']+'</b>/天</span> <span class="ago">'+data['price']+'/天</span>');
+      }else if(data['charge_type'] === 2) { //斤塘
+        $('#price').html('<span class="now"><b>&yen;'+data['discount_price']+'</b>/斤</span> <span class="ago">'+data['price']+'/斤</span>');
+      }else{  //免费
+        $('#price').html('<span class="now"><b>&yen;免费</span>');
+      }
+      $('#pondName').text(data['seller']['name']);
+      $('#logo').attr('src', data['seller']['logo']);
+    }
+    renderData();
+
+    bindCheckedEvent($('#fish'));
+    bindCheckedEvent($('#service'));
+    bindCheckedEvent($('#env'));
+
+
+    function bindCheckedEvent(el) {
+      el.on('click', 'input[type=checkbox]', function() {
+        var which = $(this).attr('value');
+        if(this.checked) {
+          for(var i=0; i<which; i++) {
+            el.find('input[type=checkbox]').eq(i)[0].checked = true;
+          }
+        }else{
+          var inputs = el.find('input[type=checkbox]');
+          for(var i=0; i< inputs.length; i++) {
+            inputs.eq(i)[0].checked = false;  
+          }
+          for(var i=0; i< which - 1; i++) {
+            inputs.eq(i)[0].checked = true;  
+          }
+          this.checked = true;
+        }
+      });
+    }
+
+
+    $('#commentText').on('keyup', function() {
+      $('#curNumStatus').text($(this).val().length);
+    });
+
+    //上传图片
+    $('#picList').on('click',  'li', function() {
+      var self = this;
+      api.getPicture({
+          sourceType: 'album',
+          encodingType: 'jpg',
+          mediaValue: 'pic',
+          destinationType: 'base64',
+          allowEdit: true,
+          quality: 30,
+          targetWidth:100,
+          targetHeight:100,
+          saveToPhotoAlbum: false
+        }, function(ret, err){ 
+            if (ret) {
+              encodeBase64 = ret.base64Data.split(',')[1];
+
+              sendAjax(URLConfig('uploadPic'), {'tag' : 'pond_comment','pic' : encodeBase64}, function(datas, code, msg) {
+                if(code === 0) {
+                  var src = datas['src'];
+
+                  $(self).html('<img src="'+src+'" />');
+
+                  $('#picList').append('<li><div class="img-box">+</div></li>');
+                }else{
+                  api.toast({
+                    msg: msg || '上传图片，请稍后再试！',
+                    duration:2000,
+                    location: 'middle'
+                  });
+                }
+
+              });
+            } else{
+              api.toast({
+                msg: err.msg ,
+                duration:2000,
+                location: 'middle'
+              });
+            };
+        });
+    });
+    
+    //发表
+    $('#writeComment').on('click',  function() {
+      var total = $('#level').find('input:checked').val();
+      var fish = $('#fish').find('input:checked').last().val();
+      var service = $('#service').find('input:checked').last().val();
+      var env = $('#env').find('input:checked').last().val();
+      var text = $('#commentText').val();
+      var picsArr = [];
+      var imgs = $('#picList').find('li img');
+      for(var i=0; i<imgs.length; i++) {
+        picsArr.push(imgs.eq(i).attr('src'));
+      }
+      var param = {
+        'total' : total,
+        'service' : service,
+        'fish' : fish,
+        'env' : env,
+        'comment' : text,
+        'pics' : picsArr,
+        'id' : data['id']
+      }
+      sendAjax(URLConfig('writeComment'), param, function(datas, code, msg) {
+        if(code === 0) {
+          api.toast({
+            msg: '评价成功！',
+            duration:2000,
+            location: 'middle'
+          });
+
+          // api.execScript({
+          //   'name' : 'order',
+          //   'frameName' : 'order-detail_frame',
+          //   'script' : 'commentAfter();'
+          // });
+
+          $api.setStorage('rewarbComment', datas);
+          setTimeout(function() {
+            api.execScript({
+              name: 'comment-write',
+              script: 'closeWin();'
+            });
+          },1500);
+        }else{
+          api.toast({
+            msg: msg || '发表失败，请稍后再试！',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+
+      });
+
+
+    });
+
+
+  }
+
+</script>
+</html>

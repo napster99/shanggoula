@@ -1,0 +1,112 @@
+.mission .hd{
+	height: 112.5px;
+	overflow: hidden;
+	background: url(../images/mission.jpg) no-repeat;
+	background-size: 100%;
+}
+
+.mission h3{
+	height: 30px;
+	line-height: 30px;
+	color: #555;
+	font-size: 13px;
+	padding: 0 10px;
+}
+.mission h3 span { margin-left: 5px}
+
+.mission li{
+	height: 60px;
+	line-height: 60px;
+	background-color: #fff;
+	padding: 0 10px;
+	position: relative;
+}
+.mission li .name{
+	font-size: 14px;
+	color: #222;
+}
+
+.mission li .r{
+	height: 100%;
+}
+
+.mission li .r:before{
+	content: "";
+	height: 100%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.mission li .r .award,.mission li .r>.icon-m{
+	vertical-align: middle;
+}
+
+.mission li .r .award{
+	color: #ff8a00;
+	margin-right: 5px;
+	font-size: 13px;
+}
+
+.mission li .r .award .icon-m{
+	font-size: 15px;
+	vertical-align: -1px;
+	margin-left: 2px;
+}
+
+.mission li .r>.icon-m{
+	font-size: 18px;
+	color: #aaa;
+}
+
+.mission li .icon-wrap{
+	height: 40px;
+	width: 40px;
+	border-radius: 1000px;
+	background-color: #ddd;
+	float: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	font-size: 21px;
+	line-height: 40px;
+	text-align: center;
+	position: relative;
+	z-index: 2;
+	color: #fff;
+}
+
+.mission li:before{
+	content: "";
+	display: block;
+	width: 1px;
+	height: 100%;
+	background-color: #ddd;
+	position: absolute;
+	top: 0; left: 30px;
+}
+
+
+.mission .active .icon-wrap{
+	background-color: transparent !important;
+	color: #22cb20;
+}
+
+.mission .active .name{
+	color: rgba(34,34,34,.5);
+}
+
+.mission .active .r .award{
+	color: rgba(255,138,0,.5);
+}
+
+
+/*
+.mission ul {background: #fff; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd}
+
+.mission h3, .mission ul { padding: 0 10px}
+.mission ul li .name, .mission ul li .icon { display: inline-block;}
+.mission ul li { height: 36px; line-height: 36px; margin: 5px 0}
+.mission ul li .icon {border-radius: 100px; border-width: 0px;  background: #ddd; width: 36px; text-align: center;}
+.mission ul li .icon .icon-m { font-size: 24px; vertical-align: middle;}
+.mission ul li .award { padding: 0 5px}
+.mission ul li .award,.mission ul li .r {font-size: 16px}*/
+/*.mission ul:before { margin-left: 50px; display: block; height: 100%; float: left; width: 100px; background: red; content: '1' ; }*/

@@ -1,0 +1,246 @@
+/*活动策划*/
+.event-planning{
+  height: 181.5px;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  background-color: #fff;
+}
+
+.event-planning .gallery{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.event-planning .gallery li{
+  float: left;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.event-planning .gallery img{
+  height: 100%;
+}
+
+.event-planning .focus{
+  overflow: hidden;
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  -webkit-transform: translateX(-50%);
+}
+
+.event-planning .focus li{
+  float: left;
+  width: 6px;
+  height: 6px;
+  border-radius: 100px;
+  background-color: #fff;
+  margin: 0 3px; 
+}
+
+.event-planning .focus .active{
+  background-color: #25b6ed;
+}
+
+
+/*放鱼头条*/
+
+.fish-announcement{
+  height: 33px;
+  background-color: #fff;
+  padding: 4px 0;
+  overflow: hidden;
+}
+
+.fish-announcement .pic{
+  width: 74px;
+  height: 23.5px;
+  background: url(../images/fish-announcement.png) no-repeat;
+  background-size: 100%;
+  float: left;
+}
+
+
+.fish-announcement ul{
+  height: 23.5px;
+  overflow: hidden;
+  margin-left: 60px;
+}
+
+.fish-announcement li{
+  height: 100%; 
+  padding-left: 7px;
+  line-height: 23.5px;
+}
+
+
+.block-head{
+  font-size: 15px;
+  height: 35px;
+  line-height: 35px;
+  background-color: #fff;
+  color: #222;
+  margin-top: 10px;
+}
+
+.block-head:before{
+  content: "";
+  float: left;
+  height: 100%;
+  width: 6px;
+  background-color: #25b6ed;
+  margin-right: 10px;
+}
+
+.block-head .icon-m{
+  font-size: 15px;
+  margin-right: 6px;
+  color: #aaa;
+}
+
+.block-head .r .icon-m{
+  font-size: 18px;
+  vertical-align: -2px;
+}
+
+
+/*推荐商户*/
+.recommend-shops{
+  background-color: #fff;
+  text-align: center;
+}
+.recommend-shops li{
+  float: left;
+  width: 50%;
+  padding: 10px 13px 15px;
+}
+
+.recommend-shops .name{
+  font-size: 16px;
+  padding-left: 1px;
+  height: 36px;
+  line-height: 36px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recommend-shops .img-box{
+  height: 112px;
+  overflow: hidden;
+  position: relative;
+}
+
+
+.recommend-shops .price{
+  color: #aaa;
+}
+
+.recommend-shops .price strong{
+  font-size: 16px;
+  color: #ff8a00;
+}
+
+.recommend-shops .price .ago{
+  text-decoration: line-through;
+  margin-left: 5px;
+}
+
+.article-list{
+  background-color: #fff;
+}
+
+.read-more{
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+  margin: 10px;
+  background-color: #f4f4f4;
+}
+
+
+
+/*签到*/
+
+.pop-sign{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  width: 60%;
+  background-color: rgba(0,0,0,.85);
+  border-radius: 3px;
+  text-align: center;
+  padding: 28.5px 10px;
+}
+
+.dragon-ball{
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.dragon-ball li{
+  float: left;
+  width: 21px;
+  height: 21px;
+  border-radius: 100px;
+  line-height: 21px;
+  text-align: center;
+  color: #333;
+  background-color: #666;
+  margin: 0 1.5px;
+  -webkit-transition:.5s ease all;
+}
+
+.dragon-ball .active{
+  color: #fff;
+  background-color: #8ac628;
+}
+
+
+.pop-sign .info{
+  color: #fff;
+  font-size: 13px;
+}
+
+.pop-sign .info strong{
+  font-size: 17.5px;
+  color: #8ac628;
+  margin: 0 5px; 
+}
+
+.pop-sign .desc{
+  line-height: 1.6;
+  margin-top: 25px;
+  color: #a6a6a6;
+}
+
+.pop-sign .desc span{
+  color: #f5a00c;
+}
+
+
+.pop-sign .decorative{
+  background: url(../images/figure.png) no-repeat center center;
+  background-size: 100%;
+  margin-top: 15px;
+}
+
+.pop-sign .title-badage{
+  border-radius: 2px;
+  border: 1px solid #f5a00c;
+  display: inline-block;
+  color: #f5a00c;
+  padding: 1px 2px;
+}
+
+
+

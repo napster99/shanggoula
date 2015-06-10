@@ -1,0 +1,73 @@
+.key-info{ 
+  overflow: hidden; 
+  color: #222;
+}
+
+.key-info .avatar{
+  float: left;
+}
+
+.key-info .name{
+  font-size: 16px;
+  margin: 11px 0 12px 75px;
+}
+
+.key-info .name .icon-m{
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.key-info .uid{
+  font-size: 14px;
+  margin-left: 75px;
+}
+
+
+.my-qrcode{
+  background-color: #313131;
+  padding: 35px 22px;
+}
+
+.my-qrcode input{
+  text-align: center;
+  font-size: 16px;
+  padding: 0;
+}
+
+.my-qrcode input::-webkit-input-placeholder{
+  text-align: center;
+  font-size: 14px;
+}
+
+.my-qrcode .bd{
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.my-qrcode .form-row{
+  margin-bottom: 18px;
+}
+
+
+.my-qrcode .qrcode{
+  width: 247.5px;
+  height: 247.5px;
+  overflow: hidden;
+  margin: 36px auto 40px;
+}
+
+
+.my-qrcode .desc{
+  color: #aaa;
+  text-align: center;
+}
+
+.my-qrcode .text-tips{
+  margin-top: 20px;
+  color: #aaa;
+  text-align: center;
+}
+
+

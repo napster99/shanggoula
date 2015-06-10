@@ -1,0 +1,104 @@
+
+/*评论列表*/
+
+.comment-list{
+	position: relative;
+	background-color: #fff;
+}
+
+.comment-list>ul>li{
+	padding: 10px;
+	position: relative;
+}
+
+.comment-list .avatar-round{
+	border-radius: 1000px;
+	width: 42px;
+	height: 42px;
+	background-color: #ddd;
+	float: left;
+}
+
+.comment-list .info{
+	margin-left: 60px;
+	overflow: hidden;
+}
+
+.comment-list .info h3{
+	font-size: 13px;
+	color: #222;
+	margin-top: 5px;
+}
+
+.comment-list .info .content{
+	line-height: 1.4;
+	color: #555;
+	margin-top: 5px;
+	font-size: 14px;
+}
+
+.comment-list .info .pics{
+	overflow: hidden;
+	margin-top: 5px;
+}
+
+.comment-list .info .pics li{
+	float: left;
+	margin-right: 5px;
+}
+
+.comment-list .img-box{
+	width: 50px;
+	height: 50px;
+}
+
+.comment-list .expansion{
+	padding: 5px;
+	text-align: center;
+}
+
+.comment-list .star-time{
+	margin-top: 5px;
+}
+
+
+.comment-list .star-time .stars{
+	display: inline-block;
+	overflow: hidden;
+	vertical-align: middle;
+}
+
+.comment-list .icon-star-fill,.comment-list .icon-star-half{
+	color: #f90;
+}
+
+.comment-list .star-time .icon-m{
+	margin-right: 2px;
+	float: left;
+}
+
+.comment-list .star-time .time{
+	margin-left: 6px;
+	vertical-align: middle;
+	color: #aaa;
+}
+
+.comment-list .seal{
+	width: 50px;
+	height: 50px;
+	background: url(../images/seal.png) no-repeat;
+	background-size: 100%;
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	border-radius: 1000px;
+}
+
+.comment-list .icon-report{
+	font-size: 20px;
+	color: #aaa;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+

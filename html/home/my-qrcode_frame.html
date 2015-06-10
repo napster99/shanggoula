@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/form.css">
+  <link rel="stylesheet" href="../../css/my-qrcode.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <title>我的二维码_上钩啦_找钓点，就用上钩啦</title>
+  
+</head>
+<body>
+<div class="wrap">
+  <div class="my-qrcode">
+    <div class="bd">
+      <div class="key-info">
+        <div class="avatar">
+          <img id="avatar" src="../../images/avatar.png">
+        </div>
+        <div class="name"><span id="nickname"></span><i id="gender" class="icon-m"></i></div>
+        <div class="uid">钩钩号：<span id="no"></span></div>
+      </div>
+      <div class="qrcode"><img id="qrcodeImg" src=""></div>
+      <div class="desc">扫一扫上面的二维码图案，加我钩钩号</div>
+    </div>
+
+    <div name="qrcode" class="form-row clearfix hidden">
+      <div class="l">
+        <input id="gougouhao" type="text" placeholder="输入推广员钩钩号" />
+      </div>
+      <div class="r">
+        <button id="sureBtn" type="button" class="btn primary-button">确认</button>
+      </div>
+    </div>
+
+    <div name="qrcode" class="text-tips hidden">推广有效期还剩<span id="hour"></span>小时<span id="minute"></span>分钟</div>
+
+  </div>
+
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var user = $api.getStorage('user');
+
+    if(api.pageParam['no']) {
+      $('#gougouhao').val(api.pageParam['no']);
+    }
+
+    if(user['gender'] == 1){
+      $('#gender').addClass('icon-male').addClass('color-blue');
+    }else{
+      $('#gender').addClass('icon-female').addClass('color-red');
+    }
+
+    $('#nickname').text(user['nickname']);
+    $('#no').text(user['no']);
+    $('#avatar').attr('src',user['avatar']);
+    $('#qrcodeImg').attr('src',user['qrcode']);
+
+      // promote_countdown   秒
+    var hour = parseInt(user['promote_countdown']/60/60);
+    var minute = parseInt(user['promote_countdown']%3600/60);
+
+    if(minute || hour) {
+      $('div[name=qrcode]').removeClass('hidden');
+      $('#hour').text(hour);
+      $('#minute').text(minute);
+    }
+    
+    $('#sureBtn').on('click', function() {
+      var gougouhao = $('#gougouhao').val();
+
+      if(gougouhao == '') {
+        api.toast({
+          msg: '请输入钩钩号',
+          duration:2000,
+          location: 'middle'
+        });
+        $('#gougouhao').focus();
+        return;
+      }
+
+      sendNoRequest(gougouhao);
+
+    }); 
+    
+
+    function sendNoRequest(gougouhao) {
+      sendAjax(URLConfig('promoteCheck'), {'no' : gougouhao}, function(data, code, msg) {
+        if(code === 0) {
+          if(data['gold']) {
+            openRewarbTip({
+              'gold' : data['gold'],
+              'exp' : data['exp'],
+              'tasks' : data['tasks'],
+              'name' : '推广新用户'
+            }, '../../html/rewarbTip_frame.html')
+          }
+          api.toast({
+            msg: '推广成功！',
+            duration:2000,
+            location: 'middle'
+          });
+        }else{
+          api && api.toast({
+            msg: msg || '核销失败，请稍后再试！',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+  }
+
+</script>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/component.css">
+  <link rel="stylesheet" href="../../css/font-icon.css">
+  <link rel="stylesheet" href="../../css/collect.css">
+  <title>我的我的收藏_上钩啦_找钓点，就用上钩啦</title>
+</head>
+<body>
+<div class="wrap">
+
+
+  <!-- 我的收藏列表 -->
+  <div class="collect-list">
+    <ul id="collectList" class="hidden">
+    </ul>
+  </div>
+  <!-- 我的收藏列表end -->
+
+  <div class="load-page wait"></div>
+
+</div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/zepto.min.js"></script>
+<script src="../../script/common.js"></script>
+<script>
+  apiready = function() {
+
+    var page_size = 15;
+
+    var isEnd = false, isAjaxing = false;
+    var condicationObj = {
+      'page' : 1,
+      'page_size' : page_size
+    }
+
+
+    function getListData(name, params, callback, first) {
+      if(first) {
+        showLoadDiv(true, $('#collectList'));  
+      }else{
+        showButtonLoadDiv(true, $('#collectList'), '../../images/loadButton.gif');  
+      }
+      isAjaxing = true;
+      sendAjax(URLConfig(name), params, function(data, code, msg) {
+        isAjaxing = false;
+        api.refreshHeaderLoadDone();
+        if(code === 0) {
+          callback(data, first);
+        }else{
+          api.toast({
+            msg: msg || '请求失败，稍后再试',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+      });
+    }
+
+
+    getListData('favoriteList', condicationObj, function(data, first) {
+      renderData(data,first);
+    }, true);
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/push-down.gif',
+        bgColor: '#fff',
+        textColor: '#ccc',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+       isEnd = false;
+       condicationObj = {
+        'page' : 1,
+        'page_size' : page_size
+       }
+       isAjaxing = false;
+       $('#collectList').html('');
+      getListData('favoriteList', condicationObj, renderData, true);
+    });
+
+    //下拉加载
+    api.addEventListener({
+      name: 'scrolltobottom'
+    }, function(ret, err){
+      if(!isEnd && !isAjaxing) {
+        showButtonLoadDiv(false, $('#collectList'), '../../images/loadButton.gif');
+        ++condicationObj['page'];
+        getListData('favoriteList', condicationObj ,renderData);
+      }
+    });
+
+    function renderData(data, first) {
+      var htmlStr = '';
+      for(var i=0; i<data.length; i++) {
+        htmlStr += '<li onclick="enterDetail(this);" class="border-bottom" id="'+data[i]['id']+'" type="'+data[i]['type']+'">'
+                +'  <div class="img-box"><img src="'+data[i]['thumb']+'"></div>'
+                +'  <div class="time">'+data[i]['dateline']+'</div>'
+                +'  <div class="info">'
+                +'    <h3 class="name">'+data[i]['title']+'</h3>'
+                +'    <div class="desc">'+data[i]['desc']+'</div>'
+                +'  </div>'
+                +'</li>'
+      }
+      if(first) {
+        $('#collectList').html(htmlStr);
+      }else{
+        $('#collectList').append(htmlStr);
+      }
+
+
+      // if(first) {
+        showLoadDiv(false, $('#collectList'));
+      // }
+
+      showButtonLoadDiv(false, $('#collectList'), '../../images/loadButton.gif');
+      if(data.length < page_size) {
+        isEnd = true;
+        if(first && data.length === 0) {
+          showNoData($('#collectList'));
+        }else if(!first){
+          api.toast({
+            msg: '没有更多数据了',
+            duration:2000,
+            location: 'middle'
+          });
+        }
+        
+      }else{
+        showButtonLoadDiv(true, $('#collectList'), '../../images/loadButton.gif');
+      }
+    }
+
+    //进入详情页
+    window.enterDetail = function(el) {
+      var type = $(el).attr('type');
+      if(type == 1) {  // 钓点
+        api.openWin({
+          name: 'pond_detail',
+          url: '../pond-details.html',
+          bounces : false,
+          pageParam: {'pondId': el.id}
+        });
+      }else if(type == 2){ //文章
+        api.openWin({
+          name: 'detail',
+          url: '../information-details.html',
+          pageParam: {'id': el.id}
+        });
+      }
+    }
+
+
+  }
+
+</script>
+</html>

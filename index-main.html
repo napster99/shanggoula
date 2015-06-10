@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/component.css">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/article.css">
+  <link rel="stylesheet" href="./css/font-icon.css">
+  <title>首页_上钩啦_找钓点，就用上钩啦</title>
+
+  <style>
+
+  .swipe {
+    overflow: hidden;
+    /*visibility: hidden;*/
+    position: relative;
+  }
+  .swipe-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  .swipe-wrap > li {
+    float:left;
+    width:100%;
+    position: relative;
+  }
+  
+  .banner{
+    width: 100%;
+    height: 155px;
+    position: relative;
+  }
+  .swipe{
+    overflow: hidden;
+  }
+  .swipe-wrap {
+    overflow: hidden;
+  }
+  .swipe-wrap > li {
+    float: left;
+    width: 100%;
+  }
+  .show-pic {
+    width: 100%;
+    height: 155px;
+  }
+  .dot-box{
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    margin-left: -30px;
+  }
+  .dot{
+    width: 5px;
+    height: 5px;
+    background: #eee;
+    float: left;
+    margin-left: 7px;
+    border-radius: 5px;
+  }
+  .dot.active{
+    background: #4dc8ff;
+  }
+  .host{
+    padding: 5px;
+    font-size: 13px;
+    color: #494949;
+    background: #fff;
+  }
+  .host .title{
+    font-size: 14px;
+    color: #ec8912;
+  }
+  .host .line{
+    color: #f2f4f3;
+  }
+  .host .recommend{
+    color: #cd2b42;
+    border:1px solid #cd2b42;
+    border-radius: 3px;
+  }
+  .favorable,.fresh{
+    margin-top: 10px;
+    background: #fff;
+    font-size: 14px;
+  }
+  .module .title{
+    border-left: 5px solid #62c3fa;
+    padding: 5px 7px;
+  }
+  .module .title i{
+    vertical-align: -3px;
+    margin-right: 3px;
+  }
+  .module .title .more{
+    float: right;
+  }
+  .module .bd{
+    border-top: 1px solid #f6f6f6;
+  }
+  .favorable .bd ul{
+    width: 100%;
+  }
+  .favorable .bd ul li{
+    width: 50%;
+    padding:0 10px;
+    float: left;
+  }
+  .favorable .bd ul li:first-child{
+    border-right:1px solid #f6f6f6;
+  }
+  .favorable .bd ul .name{
+    padding: 7px 0;
+    font-size: 13px;
+  }
+  .favorable .bd ul .number{
+    float: right;
+    color: #606060;
+  }
+  .favorable .bd ul .number span{
+    color: #606060;
+  }
+  .favorable .bd .detail{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+  .favorable .bd .day,
+  .favorable .bd .day span{
+    color: #ec8912;
+  }
+  .favorable .bd .btn{
+    background: #ff8a00;
+    color: #fff;
+    text-align: center;
+    padding: 3px 0;
+    margin-bottom: 15px;
+  }
+  .favorable .bd .btn span{
+    font-size: 18px;
+    color: #fff;
+    margin-right: 5px;
+  }
+  .fresh .bd .mes-list .pic{
+    width: 89px;
+    height: 62px;
+    float: right;
+    margin-left: 8px;
+  }
+  .fresh .bd .mes-list li{
+    padding: 10px;
+    border-bottom: 1px solid #f6f6f6;
+  }
+  .fresh .bd .mes-list .detail{
+    margin-right: 20px;
+  }
+  .fresh .bd .ranking{
+    margin-top: 10px;
+    color: #a9a9a9;
+  }
+  .fresh .bd .ranking span{
+    color: #a9a9a9;
+    font-size: 12px;
+  }
+  .fresh .bd .pic-box{
+    padding: 10px;
+    margin-bottom: 45px;
+  }
+  .fresh .bd .pic-box .til{
+    margin-bottom: 10px;
+  }
+  .fresh .bd .pic-box li{
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+  }
+  .fresh .bd .pic-box li img{
+    width: 100%;
+    height: 100%;
+  }
+  .fresh .bd .pic-box li:last-child{
+    margin-right: 0;
+  }
+
+
+/*数据过滤*/
+.data-filter li{
+  float: left;
+  width: 33.333333%;
+  height: 41px;
+  line-height: 41px;
+  background-color: #fff;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+
+.data-filter li .icon-m{
+  vertical-align: -1px;
+}
+
+  #conditionList li.active,  #conditionList li.active .icon-m{color: #007aff;}
+ 
+  </style>
+</head>
+<body>
+
+  <!-- 头部 -->
+  <div id="header"  class="top-bar clearfix">
+    <!-- 城市选择 -->
+    <div class="l" id="changeCity">
+      <span id="curCity">--</span><i class="icon-m icon-fold"></i>
+    </div>
+    <!-- 签到 -->
+    <div id="signIn" class="r" name="signIn">
+      <i class="icon-m icon-money2"></i>签到
+    </div>
+
+    <div name="map" class="r hidden">
+      <div id="mapIcon" ><i class="icon-m icon-map"></i>地图</div> 
+      <!-- <div id="mapList" class="hidden"><i class="icon-m icon-list"></i>列表</div> -->
+    </div>
+    
+    <!-- 搜索 -->
+    <div class="center-part">
+      <div class="top-search">
+        <i class="icon-m icon-search"></i>
+        <i id="clearInput" class="icon-m icon-close-fill hidden"></i>
+        <input type="search" id="search" placeholder="请输入钓点类型或名称" />
+      </div>
+    </div>
+  </div>
+  <!-- 头部 end-->
+
+  <!-- 筛选条件 -->
+  <div id="conditionList" class="data-filter border-bottom hidden">
+    <ul class="col-3 clearfix">
+      <li class="border-right" name="city">全城<i class="icon-m icon-arrow-down"></i></li>
+      <li class="border-right" name="sort">智能排序<i class="icon-m icon-arrow-down"></i></li>
+      <li name="filter">筛选<i class="icon-m icon-arrow-down"></i></li>
+    </ul>
+  </div>
+  <!-- 筛选条件 end-->
+
+  <!-- 头部-资讯 hidden -->
+  <div id="information" class="top-bar hidden">
+    <div class="center-part">知道</div>
+  </div>
+  <!-- 头部-资讯 end-->
+
+
+  <!-- 头部-我 hidden -->
+  <div id="my" class="top-bar hidden">
+    <div class="center-part">我</div>
+  </div>
+  <!-- 头部-我 end-->
+
+  <!-- 底部 -->
+  <div id="footer" class="footer-bar">
+    <ul class="border-top">
+      <li name="index">
+        <i class="icon-m icon-home-fill"></i>
+        <div>首页</div>
+      </li>
+      <li name="information">
+        <i class="icon-m icon-know"></i>
+        <div>知道</div>
+      </li>
+      <li name="pond">
+        <i class="icon-m icon-here"></i>
+        <div>钓点</div>
+      </li>
+      <li name="tools">
+        <i class="icon-m icon-tool"></i>
+        <div>工具</div>
+      </li>
+      <li name="my">
+        <i class="icon-m icon-user"></i>
+        <div>我</div>
+      </li>
+    </ul>
+  </div>
+  <!-- 底部 -->
+
+<div id="allmap"></div>
+
+</body>
+<script src="./script/api.js"></script>
+<script src="./script/zepto.min.js"></script>
+<script src="./script/common.js"></script>
+<!-- <script src="http://api.map.baidu.com/api?type=quick&ak=hPT9U6iFzQbk9tuytSAqIQLe&v=1.0"></script> -->
+<script src="http://webapi.amap.com/maps?v=1.3&key=425928309ed735359972d7edb1534ff1"></script>
+
+<script>
+
+// 425928309ed735359972d7edb1534ff1
+  /* 首页头部和底部 */
+  apiready = function() {
+
+    api.removeLaunchView();
+   
+    // 设置ios7的标题栏字体变亮，全局用一个就行了
+    api.setStatusBarStyle({
+      style: 'light'
+    });
+
+    api.addEventListener({
+      name:'viewappear'
+    },function(ret,err){
+      // 设置ios7的标题栏字体变亮，全局用一个就行了
+      api.setStatusBarStyle({
+        style: 'light'
+      });
+    });
+
+
+    //填写定位信息
+    var mapInfo = $api.getStorage('mapInfo');
+    startLocation(function(result) {
+      var parent_code = parseInt(Number(result['regeocode']['addressComponent']['adcode'])/100)*100;
+      var parent_name = result['regeocode']['addressComponent']['city'] || result['regeocode']['addressComponent']['province'];
+      if(parent_code != mapInfo['parent_code']) {
+        //give tips
+        api.confirm({
+          title: 'testtitle',
+          msg: '当前定位城市为'+parent_name+', 是否切换？',
+          buttons:['确定', '取消']
+        },function(ret,err){
+          if(ret.buttonIndex == 1){
+            changecity(parent_code, parent_name);
+          }
+        });
+      }
+    });
+
+
+
+
+    if(!$.isEmptyObject(mapInfo)){
+      var fontLen = mapInfo['parent_name'].length;
+
+      // $('#curCity').text(fontLen*16);      
+
+      $('#curCity').text(mapInfo['parent_name']);
+    }else{
+      $('#curCity').text('未知');
+    }
+
+
+    var header = $api.byId('header');
+    var information = $api.byId('information');
+    var my = $api.byId('my');
+    $api.fixIos7Bar(header);
+    $api.fixIos7Bar(information);
+    $api.fixIos7Bar(my);
+
+    var headerPos = $api.offset(header);
+
+    
+
+    var footer = $api.byId('footer');
+    var footerPos = $api.offset(footer);
+    var conditionList = $api.byId('conditionList');
+    
+    var mainPosH = api.winHeight - headerPos.h - footerPos.h;
+    var curName = '';
+    var frameOpend = {};
+    var curCondiName = '';
+
+
+    //资讯详情
+    var infoDetailPageOpened = false, curInfoId = '';
+
+    var y = headerPos.h;
+
+    api.addEventListener({
+      name:'keyback'
+    },function(ret,err){
+      api.closeWidget({
+        id: 'A6985320282784',
+        retData: {name:'closeWidget'},
+        animation: {
+            type: 'flip',
+            subType: 'from_bottom',
+            duration: 500
+        }
+      });
+    })
+
+    $('#footer').on('touchstart',  'li',  function(event, param) {
+      var name = $(this).attr('name');
+      var user = $api.getStorage('user');
+      if(name === 'my' && $.isEmptyObject(user)) {
+        api.toast({
+          msg: '请先登陆',
+          duration:1000,
+          location: 'middle'
+        });
+        setTimeout(function() {
+          openLoginIndex();
+        },1000)
+        
+        return;
+      }
+
+      if(name !== curName) {
+        initFooterStyle();
+        $(this).find('i').addClass(getFooterStyles(name)['fillCls']);
+        $(this).addClass('active');
+      }
+
+      if(name !== curName || name === 'index') {
+        api.setFrameAttr({
+          'name' : 'index',
+          'hidden' : true
+        });
+
+        api.setFrameAttr({
+          'name' : 'information',
+          'hidden' : true
+        });
+
+        api.setFrameAttr({
+          'name' : 'pond',
+          'hidden' : true
+        });
+
+        api.setFrameAttr({
+          'name' : 'tools',
+          'hidden' : true
+        });
+
+        api.setFrameAttr({
+          'name' : 'my',
+          'hidden' : true
+        });
+        
+        switchFrame($(this).index(), name, param);
+        curName = name;
+      }
+
+    })
+
+    function initFooterStyle() {
+      $('#footer').find('li.active').removeClass('active');
+      $('#footer').find('li[name=index]').find('i').removeClass(getFooterStyles('index')['fillCls']).addClass(getFooterStyles('index')['lineCls']);
+      $('#footer').find('li[name=information]').find('i').removeClass(getFooterStyles('information')['fillCls']).addClass(getFooterStyles('information')['lineCls']);
+      $('#footer').find('li[name=tools]').find('i').removeClass(getFooterStyles('tools')['fillCls']).addClass(getFooterStyles('tools')['lineCls']);
+      $('#footer').find('li[name=pond]').find('i').removeClass(getFooterStyles('pond')['fillCls']).addClass(getFooterStyles('pond')['lineCls']);
+      $('#footer').find('li[name=my]').find('i').removeClass(getFooterStyles('my')['fillCls']).addClass(getFooterStyles('my')['lineCls']);
+    }
+
+
+    //获取样式
+    function getFooterStyles(name) {
+      var fillCls = '', lineCls = '';
+      switch(name) {
+        case 'index':
+          fillCls = 'icon-home-fill';
+          lineCls = 'icon-home';
+          break;
+        case 'information':
+          fillCls = 'icon-know-fill';
+          lineCls = 'icon-know';
+          break;
+        case 'pond':
+          fillCls = 'icon-here-fill';
+          lineCls = 'icon-here';
+          break;
+        case 'tools':
+          fillCls = 'icon-tool-fill';
+          lineCls = 'icon-tool';
+          break;
+        case 'my':
+          fillCls = 'icon-user-fill';
+          lineCls = 'icon-user';
+          break;
+      }
+
+      return {
+        'fillCls' : fillCls,
+        'lineCls' : lineCls
+      }
+    }
+
+
+    window.openIndexFrame = function() {
+      //默认打开首页
+      $('#footer').find('li[name=index]').trigger('touchstart');
+
+      initFooterStyle();
+      $('#footer').find('li[name=index]').addClass('active');
+      $('#footer').find('li[name=index]').find('i').addClass(getFooterStyles('index')['fillCls']).removeClass(getFooterStyles('index')['lineCls']);
+
+    }
+
+    openIndexFrame();
+
+
+    // api.setWinAttr({
+    //   bounces: false,
+    //   bgColor: '#fff',
+    //   vScrollBarEnabled:true,
+    //   hScrollBarEnabled:true,
+    //   scaleEnabled:true,
+    //   slidBackEnabled:false
+    // });
+
+    var pondPageOpend = false;
+
+
+
+    
+    
+    function openTools() {
+      var options = {
+        name: 'tools',
+        url : 'html/tools_frame.html',
+        rect: {x:0, y:0, w:'auto', h:api.winHeight  - footerPos.h},
+        bgColor: '#1998f5',
+        bounces : true,
+        vScrollBarEnabled:false,
+        hScrollBarEnabled:false
+      }
+      api.openFrame(options);
+      api.setFrameAttr({
+        'name' : 'tools',
+        'hidden' : true
+      });
+      frameOpend['tools'] = true;
+    }
+
+    openTools();
+
+
+    /* 切换Frame */
+    function switchFrame(index, name, param) {
+      //关闭放鱼头条frame
+      api.closeFrame({
+        'name' : 'putin'
+      });
+
+      //关闭精选优惠frame
+      api.closeFrame({
+        'name' : 'favorable'
+      });
+
+      //关闭地图
+      // $('#mapList').trigger('click');
+      
+      $('#header, #information, #pond, #my, #conditionList').addClass('hidden');
+
+      switch(index) {
+        case 0:   //首页
+          $('#header, div[name=signIn]').removeClass('hidden');
+          $('div[name=map]').addClass('hidden');
+          break;
+        case 1: //资讯
+          $('#information').removeClass('hidden');
+          break;
+        case 2:  // 钓点
+          $('#header, div[name=map]').removeClass('hidden');
+          $('div[name=signIn]').addClass('hidden');
+          $('#conditionList').removeClass('hidden');
+          pondPageOpend = true;
+          break;
+        case 3: //工具
+          // $('#tools').removeClass('hidden');
+          break;
+        case 4: //个人中心
+          $('#my').removeClass('hidden');
+          break;
+      }
+      
+
+      var rect = {};
+      if(index === 2) {
+        var condiPos = $api.offset(conditionList);
+        // api.setFrameAttr({
+        //   'name' : 'index',
+        //   'rect' : {x:0, y: (headerPos.h + condiPos.h), w:'auto', h:mainPosH - condiPos.h}
+        // });
+        api.setFrameAttr({
+          'name' : 'index',
+          'hidden' : true
+        })
+        rect = {x:0, y:headerPos.h + condiPos.h, w:'auto', h:mainPosH - condiPos.h};
+      }else if(index === 3) {
+        rect = {x:0, y:0, w:'auto', h:api.winHeight  - footerPos.h}
+      }else{
+        rect = {x:0, y:y, w:'auto', h:mainPosH}
+      }
+      if(!frameOpend[name]) {
+        var options = {
+          name: name,
+          url : 'html/'+name+'_frame.html',
+          rect:rect,
+          bgColor: 'rgba(0,0,0,0)',
+          pageParam : param,
+          vScrollBarEnabled:true,
+          hScrollBarEnabled:true
+        }
+
+        if(index === 3) {
+          options['bounces'] = false;
+        }
+
+        api.openFrame(options);
+
+        frameOpend[name] = true;
+
+        if(name === 'pond') {
+          var options = {
+            name: 'condition',
+            url: './html/condition.html',
+            rect:{
+                x:0,
+                y:headerPos.h + $('#conditionList').height(),
+                w:'auto',
+                h:'auto'
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0.5)',
+            vScrollBarEnabled:false,
+            hScrollBarEnabled:false
+          }
+          //打开筛选条件面板
+  		    api.openFrame(options);
+
+  		    api.setFrameAttr({
+  		      'name' : 'condition',
+  		      'hidden' : true
+  		    });
+
+        }
+      }else{
+        api.setFrameAttr({
+          'name' : name,
+          'hidden' : false
+        });
+
+        //触发天气界面初始化
+        if(index === 3) {
+          api.execScript({
+            frameName: 'tools',
+            script: 'fishNum();'
+          });
+        }
+      }
+    }
+
+    authInfo(function(data, code, msg) {
+      if(code === 0) {
+        $api.setStorage('user', data);
+      }
+    });
+
+
+    //打开资讯详情
+    window.openInfoDetail = function(id) {
+
+      if(infoDetailPageOpened) {
+
+        if(curInfoId != id) {
+          //通知文章详情页 更新记录
+          api.execScript({
+            name: 'detail',
+            script: 'updateContent("'+id+'");'
+          });
+
+          curInfoId = id;
+        }
+        
+      }
+
+
+      api.openWin({
+        name: 'detail',
+        url: './html/information-details.html',
+        pageParam: {'id': id},
+        bounces :false
+      });
+
+      infoDetailPageOpened = true;
+
+      
+      
+    }
+
+
+    
+    //钓点列表筛选 napster
+    $('#conditionList').on('click', 'li', function() {
+      var name = $(this).attr('name');
+      $('#conditionList').find('li.active').removeClass('active');
+      if(name != curCondiName) {
+        $(this).parents('.condition-list').find('li').removeClass('active');
+        $(this).addClass('active');
+        curCondiName = name;
+        api.execScript({
+          frameName: 'condition',
+          script: 'openCondition("'+$(this).attr('name')+'");'
+        });
+        api.setFrameAttr({
+          'name' : 'condition',
+          'hidden' : false
+        });
+      }else{
+        closeConditionPanel();
+      } 
+
+    });
+
+    function closeConditionPanel() {
+      api.setFrameAttr({
+        'name' : 'condition',
+        'hidden' : true
+      });
+      $(this).removeClass('active');
+      curCondiName = '';
+    }
+
+    //筛选反馈
+    window.condiBack = function() {
+      $('#conditionList').find('li.active').removeClass('active');
+      curCondiName = '';
+    }
+
+
+    $('#clearInput').on('touchstart', function() {
+      $('#search').val('');
+      $(this).addClass('hidden');
+    });
+
+    //搜索
+    $('#search').on('keyup',  function(event) {
+      var q = $(this).val(), which = event.keyCode || event.which;
+
+      if($(this).val() != '') {
+        $('#clearInput').removeClass('hidden');
+      }else{
+        $('#clearInput').addClass('hidden');
+      }
+
+      if(event.keyCode === 13) {
+        //关闭地图
+        // $('#mapList').trigger('click');
+
+        $('#footer').find('li[name=pond]').trigger('touchstart',{'search' :  true, 'q' : q});
+
+        initFooterStyle();
+        $('#footer').find('li[name=pond]').addClass('active');
+        $('#footer').find('li[name=pond]').find('i').addClass(getFooterStyles('pond')['fillCls']).removeClass(getFooterStyles('pond')['lineCls']);
+
+
+        if(pondPageOpend) { //打开过的
+          api.execScript({
+            frameName: 'pond',
+            script: 'searchFunc("'+q+'");'
+          })
+        }
+      }
+    }).on('click',  function() {
+      //关闭筛选
+      closeConditionPanel();
+    });
+
+    // //放鱼头条
+    // window.openPutInFrame = function() {
+    //   api.openFrame({
+    //     name: 'putin',
+    //     url: './html/put_in.html',
+    //     rect:{x:0, y:y, w:'auto', h:mainPosH},
+    //     // pageParam: {'id': id},
+    //     bounces: false,
+    //     bgColor: 'rgba(0,0,0,0)',
+    //     vScrollBarEnabled:true,
+    //     hScrollBarEnabled:true
+    //   });
+    // }
+
+    //精选优惠
+    window.openFavorableFrame = function() {
+      api.openFrame({
+        name: 'favorable',
+        url: './html/favorable.html',
+        rect:{x:0, y:y, w:'auto', h:mainPosH},
+        // pageParam: {'id': id},
+        bounces: false,
+        bgColor: 'rgba(0,0,0,0)',
+        vScrollBarEnabled:true,
+        hScrollBarEnabled:true
+      });
+    }
+
+    //知道列表
+    window.openInfoFrame = function() {
+      $('#footer').find('li[name=information]').trigger('touchstart');
+      initFooterStyle();
+      $('#footer').find('li[name=information]').addClass('active');
+      $('#footer').find('li[name=information]').find('i').addClass(getFooterStyles('information')['fillCls']).removeClass(getFooterStyles('information')['lineCls']);
+    }
+
+    var isMapOpend = false;
+    
+
+    //显示地图
+    $('div[name=map]').on('click',  function() {
+      // $('#mapIcon').addClass('hidden');
+      // $('#mapList').removeClass('hidden');
+
+      // if(isMapOpend) {
+        
+        
+
+      // }else{
+        //打开地图Frame
+        // api.openFrame({
+        //   name: 'map',
+        //   url: './html/map.html',
+        //   rect:{
+        //       x:0,
+        //       y:headerPos.h,
+        //       w:'auto',
+        //       h:'auto'
+        //   },
+        //   bounces: false,
+        //   bgColor: 'rgba(0,0,0,0.5)',
+        //   vScrollBarEnabled:false,
+        //   hScrollBarEnabled:false
+        // });
+
+        $api.setStorage('whichMap', 'map1');
+
+        api.openWin({
+          'name' : 'map',
+          'url' : './html/map.html',
+          'bounces' : false,
+          'vScrollBarEnabled' : false,
+          'hScrollBarEnabled' : false
+        });
+
+        // isMapOpend = true;
+      // }
+      
+      return false;
+    });
+
+    //关闭地图，返回列表
+    // $('#mapList').on('click', function() {
+    //   $('#mapList').addClass('hidden');
+    //   $('#mapIcon').removeClass('hidden');
+
+      
+    //   // api.closeFrame({
+    //   //   'name' : 'map'
+    //   // });
+
+    //   api.setFrameAttr({
+    //     'name' : 'map',
+    //     'hidden' : true
+    //   });
+    //   return false;
+    // });
+
+
+
+    
+    window.showSignReward = function() {
+      //++++++++++++++奖励++++++++++++++
+      var signReward = $api.getStorage('signReward');
+      if(!$.isEmptyObject(signReward)) {
+        if(signReward['gold']) {
+          openRewarbTip({
+            'gold' : signReward['gold'],
+            'exp' : signReward['exp'],
+            'tasks' : signReward['tasks'],
+            'name' : '签到奖励'
+          }, './html/rewarbTip_frame.html')
+        }
+        $api.setStorage('signReward', null);
+      }
+      //++++++++++++++奖励++++++++++++++
+    }
+
+
+    //检测是否签到，自动弹出
+    if(!api.pageParam['guangguang']) {
+      initSignFunc(true);
+    }
+    
+    function initSignFunc(auto) {
+      sendAjax(URLConfig('sign'), null, function(data, code, msg) {
+        if(!auto || ( auto &&　code === 0)) {
+          var user = $api.getStorage('user');
+          if(!$.isEmptyObject(user)) {
+            api.openFrame({
+              name: 'sign',
+              url : './html/sigin_frame.html',
+              rect:{x:0,y:0,w:'auto',h:'auto'},
+              bgColor: 'rgba(0,0,0,0.0)',
+              pageParam : data,
+              bounces : false,
+              vScrollBarEnabled:true,
+              hScrollBarEnabled:true
+            });
+          }
+        }
+      });
+    }
+
+    
+    //签到
+    $('#signIn').on('click',  function() {
+      var user = $api.getStorage('user');
+      if($.isEmptyObject(user)) {
+
+        api.toast({
+          msg: '请先登陆',
+          duration:1000,
+          location: 'middle'
+        });
+
+        setTimeout(function() {
+          //打开登录页
+          openLoginIndex();
+        },1000);
+        return;
+      }
+      initSignFunc();
+
+    });
+
+
+
+    
+    //切换城市
+    //http://api.map.baidu.com/geocoder/v2/?ak=d1BySee8iOi6NzP06jmgfFOU&location=29.897445,120.331398&output=json&qq-pf-to=pcqq.group
+    $('#changeCity').on('touchstart',  function() {
+      var mapInfo = $api.getStorage('mapInfo');
+      var curCity = $.isEmptyObject(mapInfo) ?  '上海' : mapInfo['parent_name'];
+
+      api.openWin({
+        name : 'changecity',
+        url : './html/changecity.html',
+        pageParam : {'currentCity' : curCity},
+        bounces : false,
+        vScrollBarEnabled : false,
+        animation: {
+          type: 'movein',
+          subType: 'from_bottom',
+          duration: 0
+        }
+      });
+
+
+      //关闭筛选
+      closeConditionPanel();
+
+    });
+
+    window.openChangeCityWin = function() {
+      $('#changeCity').trigger('touchstart');
+    }
+
+    window.changecity = function(code, city) {
+      $('#curCity').text(city);
+      $api.setStorage('mapInfo', {
+        'parent_code' : code,
+        'parent_name' : city,
+        'area_code' : code,
+        'area_name' : city
+      });
+
+      //刷新首页
+      api.execScript({
+        frameName: 'index',
+        script: 'initIndexData();'
+      });
+
+      //刷新钓点
+      api.execScript({
+        frameName : 'condition',
+        script : 'getConfigData();'
+      });
+
+      //刷新地图钓点
+      api.execScript({
+        name : 'map',
+        script : 'getConfigData();'
+      });
+
+      //刷新天气 TODO
+      api.execScript({
+        frameName : 'tools',
+        script : 'initTools();'
+      });   
+
+      //刷新精选优惠
+      api.execScript({
+        frameName : 'favorable',
+        script : 'favorableInit();'
+      });      
+    }
+
+
+  }
+  
+
+
+</script>
+</html>

@@ -1,0 +1,94 @@
+ <widget id="A6985320282784"  version="0.0.1">
+
+    <name>Cduan</name>
+
+    <description>
+
+        Example For APICloud.
+
+    </description>
+
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+
+        Developer
+
+    </author>
+
+    <content src="index.html" />
+
+    <access origin="*" />
+
+    <preference name="pageBounce" value="true"/>
+
+	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="hScrollBarEnabled" value="true"/>
+
+	<preference name="vScrollBarEnabled" value="true"/>
+
+	<preference name="autoLaunch" value="false"/>
+
+	<preference name="fullScreen" value="true"/>
+
+	<preference name="autoUpdate" value="true" />
+
+	<preference name="smartUpdate" value="true" />
+
+	<preference name="debug" value="false"/>
+
+	<preference name="iOS7StatusBarAppearance" value="true"/>
+
+	<permission name="readPhoneState" />
+
+    <permission name="call" />
+
+	<permission name="sms" />
+
+	<permission name="camera" />
+
+	<permission name="record" />
+
+	<permission name="location" />
+
+	<permission name="fileSystem" />
+
+	<permission name="internet" />
+
+	<permission name="bootCompleted" />
+
+	<permission name="hardware" />
+
+	<permission name="contact" />
+
+
+
+  <feature name="qq">
+    <param name="urlScheme" value="tencent1104687032"/>
+    <param name="apiKey" value="1104687032"/>
+  </feature>
+
+<!-- 
+  APP ID:1104687032
+APP KEY:zUbnjFqfGXPsSw0d -->
+
+
+  <feature name="weiXin">
+    <param name="urlScheme" value="wxb9687a276df33857"/>
+    <param name="apiKey" value="wxb9687a276df33857"/>
+    <param name="apiSecret" value="7c8589154a5dce74946c9c0b6c10a5e0" />
+  </feature>
+
+
+  <feature name="rongCloud">
+    <param name="appKey" value="3argexb6r9bke" />
+	</feature>
+
+
+	  
+
+</widget>
+
